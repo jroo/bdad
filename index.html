@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<script type="text/javascript" src="js/raphael-min.js"></script>
+		<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery.hotkeys-0.7.9.min.js"></script>
+		<script type="text/javascript" src="data/states.js"></script>
+		<script type="text/javascript" src="js/bdad.js"></script>
+		<link rel="stylesheet" type="text/css"  href="css/styles.css" />
+	</head>
+	<body>
+		<h1>better draw a district!</h1>
+		<div id="canvas_container"></div>
+		<div id="map_container"></div>
+		<div id="tools">
+			<ul id="tool_list">
+				<li><a href="javascript:clearPath(MAIN_CANVAS);">clear</a></li>
+				<li><a href="javascript:undo(MAIN_CANVAS);">undo</a></li>
+				<!--<li> 
+					<input id="toggle_canvas" type="checkbox" CHECKED> Canvas
+					<input id="toggle_map" type="checkbox" CHECKED> Map
+				</li>-->
+			</ul>
+		</div>
+		<h4>Select District</h4>
+		<div>
+			<select id="state_select"></select>
+			<select id="district_select"></select>
+		</div>
+		<div id="debug"></div>
+	</body>
+</html>

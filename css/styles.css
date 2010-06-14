@@ -1,0 +1,23 @@
+body {
+    font-family: helvetica;
+}
+
+#canvas_container {  
+    position:absolute;
+    width: 640px;
+    border: 3px solid #aaa;
+    background-color: transparent;
+    z-index:100;
+}
+
+#map_container {
+    position:relative;
+    z-index: 1;
+    width: 640px;
+    height: 480px;
+    background-color: #EEEEEE;
+}
+
+a {
+    color: #000000;
+}
