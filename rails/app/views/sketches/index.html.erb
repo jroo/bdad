@@ -1,0 +1,8 @@
+<% if @sketches.empty? %>
+  No sketches
+<% else %>
+  <% @sketches.each do |sketch| %>
+    <%= link_to sketch.title, sketch_path(sketch) %>
+    <br/>
+  <% end %>
+<% end %>

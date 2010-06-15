@@ -1,0 +1,9 @@
+<p>I want to sketch a <%= link_to "random", new_sketch_path %> district!</p>
+
+<% form_tag :action => :locate_district, :method => :get do %>
+<p>
+Start me with a district near this ZIP:
+<%= text_field_tag "zip", "", :size => 5 %>
+<%= submit_tag "Go" %>
+</p>
+<% end %>

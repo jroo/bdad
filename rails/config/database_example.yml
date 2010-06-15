@@ -1,0 +1,23 @@
+development:
+  host: your_db_hostname
+  adapter: postgresql
+  username: bdad
+  password: your_db_password
+  database: bdad_dev
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  host: your_db_hostname
+  adapter: postgresql
+  username: bdad
+  password: your_db_password
+  database: bdad_test
+
+production:
+  host: your_db_hostname
+  adapter: postgresql
+  username: bdad
+  password: your_db_password
+  database: bdad_prod

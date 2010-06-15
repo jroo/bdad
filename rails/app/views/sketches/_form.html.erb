@@ -1,0 +1,15 @@
+<div id="left">
+<% form_for @sketch do |f| %>
+  <canvas id="sketch">Your browser does not support the canvas tag.</canvas>
+  <div id="sketch_header">
+    <%= f.text_field :title, :size => 40 %>
+    by: <%= text_field_tag "user_name", @current_user.name, :size => 20 %>
+    <%= f.hidden_field :district_id %>
+    <%= f.submit "Share" %>
+  </div>
+</div>
+<div id="right">
+  <p><%= link_to "New district", new_sketch_path %></p>
+  <p><%= link_to "Start over with same district", new_sketch_path(:district_id => @district.id) %></p>
+</div>
+<% end %>
