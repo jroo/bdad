@@ -23,10 +23,16 @@
 				<div id="map_container"></div>
 			</div>
 			<div id="debug"></div>
-			<div>
-			<select id="state_select"></select>
-			<select id="district_select"></select>
-			</div>
+			<form>
+				<fieldset id="drawingtools">
+					<button class="undo" type="button" onclick="undo(MAIN_CANVAS)">
+						<span>Undo</span>
+					</button>
+					<button class="startover" type="button" onclick="clearPath(MAIN_CANVAS)">
+						<span>Start Over</span>
+					</button>
+				</fieldset>
+			</form>
 			<h2>The Fighting Fifth<span>by Anonymous</span></h2>
 			<form id="controls">
 				<fieldset id="instructions">
@@ -43,27 +49,14 @@
 					<button class="newdistrict" type="button">
 						<span>New District</span>
 					</button>
-					<button class="startover" type="button" onclick="clearPath(MAIN_CANVAS)">
-						<span>Start Over</span>
-					</button>
 				</fieldset>
 				<fieldset id="names">
 					<label for="username">Artist's Name</label>
 					<input id="username" type="text" value="Enter A User Name" maxlength="21" />
-					<button class="enter" type="submit">
-						<span>Enter</span>
-					</button>
 					<label for="districtname" id="districtnamelabel">District's Name</label>
 					<input id="districtname" type="text" value="Give Your District A Killer Name" maxlength="40" />
-					<button class="enter" type="submit">
-						<span>Enter</span>
-					</button>
 				</fieldset>
 				<fieldset id="undosave">
-					<label for="undo">Want To Fix Something</label>
-					<button class="undo" type="button" onclick="undo(MAIN_CANVAS)">
-						<span>Undo</span>
-					</button>
 					<label for="submit" id="submitlabel">Save My Drawing</label>
 					<button class="submit" type="button">
 						<span>Submit</span>
