@@ -29,9 +29,9 @@ h2 { background: url(../images/img-brassplate.png) top left no-repeat; width: 18
 h2 span { display: block; font-size: .8em; margin-top: 5px; overflow: hidden; }
 #controls { border-top: #0054A4 1px solid; padding: 20px 0; margin-bottom: 20px; }
 #controls fieldset { float: left; color: #0054A4;  }
-#instructions { width: 180px; margin-right: 50px }
-#searching { width: 175px; margin-right: 40px }
-#names { width: 262px; margin-right: 40px }
+#instructions { width: 180px; margin-right: 50px; }
+#searching { width: 175px; margin-right: 40px; }
+#names { width: 262px; margin-right: 40px; }
 #undosave { width: 190px; }
 #controls label { font-family: "chunk-1","chunk-2",serif; margin-bottom: 8px; display: block; }
 #controls p { font-family: Helvetica, "Helvetica Neue", "Arial", sans-serif; font-size: 80%; line-height: 120%; margin-bottom: 20px; }
