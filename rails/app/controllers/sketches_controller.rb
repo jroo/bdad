@@ -35,7 +35,13 @@ class SketchesController < ApplicationController
     @district = @sketch.district
   end
   
-  protected
+  def locate_district
+    raise "Need a zip" unless params[:zip]
+    @district = District.find_closest_by_zip(params[:zip])
+    raise "Could not find district" if @district.new_record?
+    redirect_to new_sketch_path(:district_id => @district.id)
+  end
   
+  protected
   
 end

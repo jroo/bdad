@@ -6,7 +6,7 @@ LAST_Y = null;
 PATH = "";
 SHAPE_LIST = [];
 
-DEBUG = false;
+// DEBUG = false;
 
 CANVAS_WIDTH = 640;
 CANVAS_HEIGHT = 480;
