@@ -6,7 +6,7 @@ LAST_Y = null;
 PATH = "";
 SHAPE_LIST = [];
 
-DEBUG = true;
+DEBUG = false;
 
 CANVAS_WIDTH = 640;
 CANVAS_HEIGHT = 480;
@@ -92,7 +92,7 @@ function drawPath(canvas, path) {
     drawing = canvas.path(PATH);
     drawing.attr({'stroke-width':3, 'fill':'#FFCCCC', 'opacity':0.2});
     debug(PATH);
-}    
+}
 
 function clearPath(canvas) {
     SHAPE_LIST = [];
@@ -123,7 +123,7 @@ function initializeStateList() {
     }
     select = document.getElementById('state_select');
     select.onchange = function() {
-        drawState(this.value);
+        //drawState(this.value);
         populateDistricts(this.value);
     }
 
@@ -155,14 +155,58 @@ function populateDistricts(state_value) {
     }
 }
 
+function scalePaths(paths, x_factor, y_factor, x_offset, y_offset, scale) {
+    factor = Math.min(x_factor, y_factor);
+    positioned_paths = [];
+    for (i in paths) {
+        coord_array = pathToArray(paths[i]);
+        for (j in coord_array) {
+            coord_array[j].x = (coord_array[j].x + x_offset);
+            coord_array[j].y = (coord_array[j].y + y_offset);         
+        }
+        positioned_paths.push(coord_array);
+    }
+    
+    scaled_paths = [];
+    for (i in positioned_paths) {
+        coord_array = positioned_paths[i];
+        for (j in coord_array) {
+            coord_array[j].x = ((coord_array[j].x - (CANVAS_WIDTH / 2)) * factor) + (CANVAS_WIDTH / 2);
+            coord_array[j].y = ((coord_array[j].y - (CANVAS_HEIGHT / 2)) * factor) + (CANVAS_HEIGHT / 2);
+        }
+        scaled_paths.push(arrayToPath(coord_array));
+    }
+    return(scaled_paths);
+}
+
 function drawDistrict(district_string) {
     dist_arr = district_string.split(',');
     state_id = dist_arr[0];
     district_id = dist_arr[0] + dist_arr[1];
     district = STATES.features[state_id.toString()].attributes.districts
-    alert(district_id);
+    bounds = DISTRICTS.features[district_id.toString()].bounds;
+    paths = DISTRICTS.features[district_id.toString()].paths;
+    mid_x = (bounds.minX + bounds.maxX) / 2;
+    mid_y = (bounds.minY + bounds.maxY) / 2;
+    x_offset = (CANVAS_WIDTH / 2) - mid_x;
+    y_offset = (CANVAS_HEIGHT / 2) - mid_y;
+    width = bounds.maxX - bounds.minX;
+    height = bounds.maxY - bounds.minY;
+    x_factor = CANVAS_WIDTH / width;
+    y_factor = CANVAS_HEIGHT / height;
+    var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset);
+    drawSVG(MAP_CANVAS, new_paths);
 }
 
+function drawSVG(canvas, paths) {
+    canvas.clear();
+    for (i in paths) {
+        m = canvas.path(paths[i]);
+        m.attr({'fill':'#CCCCFF'});
+    }
+}
+
+/*
 //return path list centered on canvas
 //hackhackhackhackhackhackhack
 function centerScaleRegion(path_list) {
@@ -202,6 +246,7 @@ function centerScaleRegion(path_list) {
     skew = {'x_skew':x_skew_factor, 'y_skew':y_skew_factor, 'x_offset':offset_x, 'y_offset':offset_y};
     return({'skew':skew, 'path_list':new_path_list});
 }
+*/
 
 //convert svg path to array of node elements
 function pathToArray(path) {
