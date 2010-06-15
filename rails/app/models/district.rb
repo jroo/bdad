@@ -3,10 +3,12 @@ class District < ActiveRecord::Base
   has_many :sketches
   
   def self.find_random
-    District.new
+    district = District.first
+    raise "FAIL" unless district
+    district
   end
   
-  def self.find_closest_by_zip(zip)
+  def self.find_or_create_closest_by_zip(zip)
     districts = Sunlight::District.all_from_zipcode(zip)
     raise "API lookup failed for districts for zip #{zip}" unless districts
     district = best_district(districts)

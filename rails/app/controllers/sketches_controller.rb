@@ -7,15 +7,13 @@ class SketchesController < ApplicationController
   end
   
   def new
-    @district = if params[:district_id]
-      District.find(params[:district_id])
-    else
-      District.find_random
-    end
+    @district = get_district_from_id
+    puts "@district.id : #{@district.id}"
     @sketch = Sketch.new({
       :title       => "Draw Me a District for a Great Good",
       :user_id     => current_user.id,
-      :district_id => @district.id
+      :district_id => @district.id,
+      :token       => get_new_token
     })
   end
   
@@ -28,6 +26,11 @@ class SketchesController < ApplicationController
   end
   
   def update
+    user = current_user
+    user.name = params[:user_name]
+    user.save!
+    @sketch = Sketch.find(params[:id])
+    redirect_to sketch_path(@sketch)
   end
   
   def show
@@ -37,11 +40,23 @@ class SketchesController < ApplicationController
   
   def locate_district
     raise "Need a zip" unless params[:zip]
-    @district = District.find_closest_by_zip(params[:zip])
+    @district = District.find_or_create_closest_by_zip(params[:zip])
     raise "Could not find district" if @district.new_record?
     redirect_to new_sketch_path(:district_id => @district.id)
   end
   
   protected
+  
+  def get_district_from_id
+    if params[:district_id]
+      District.find(params[:district_id])
+    else
+      District.find_random
+    end
+  end
+  
+  def get_new_token
+    Digest::SHA1.new.to_s
+  end
   
 end

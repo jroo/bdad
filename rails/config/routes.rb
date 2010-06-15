@@ -1,9 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
   # map.resources :users
-  map.resources :sketches do |sketch|
-    sketch.resources :screen_data
-    sketch.resources :map_data
-  end
+  map.resources :sketches
+  map.resources :screen_data
+  map.resources :map_data
 
   # The priority is based upon order of creation: first created -> highest priority.
 
