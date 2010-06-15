@@ -35,7 +35,7 @@ h2 span { display: block; font-size: .8em; margin-top: 5px; overflow: hidden; }
 #undosave { width: 190px; }
 #controls label { font-family: "chunk-1","chunk-2",serif; margin-bottom: 8px; display: block; }
 #controls p { font-family: Helvetica, "Helvetica Neue", "Arial", sans-serif; font-size: 80%; line-height: 120%; margin-bottom: 20px; }
-#controls input { border: #0054A4 1px solid; color: #CCC; font-size: 70%; margin-right: 5px; float: left; font-family: Helvetica, "Helvetica Neue", Arial, sans-serif; padding: 2px; }
+#controls input { border: #0054A4 1px solid; color: #AAA; font-size: 70%; margin-right: 5px; float: left; font-family: Helvetica, "Helvetica Neue", Arial, sans-serif; padding: 2px; }
 #searchbox { width: 86px; height: 14px; }
 .searchBtn { background: url(../images/btn-search.png) top left no-repeat; width: 62px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; margin-top: 1px; cursor: pointer; }
 .searchBtn:hover { background: url(../images/btn-search.png) left -18px no-repeat; }
