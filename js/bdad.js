@@ -6,7 +6,7 @@ LAST_Y = null;
 PATH = "";
 SHAPE_LIST = [];
 
-DEBUG = true;
+DEBUG = false;
 
 CANVAS_WIDTH = 640;
 CANVAS_HEIGHT = 480;
@@ -155,7 +155,7 @@ function populateDistricts(state_value) {
     }
 }
 
-function scalePaths(paths, x_factor, y_factor, x_offset, y_offset) {
+function scalePaths(paths, x_factor, y_factor, x_offset, y_offset, scale) {
     factor = Math.min(x_factor, y_factor);
     positioned_paths = [];
     for (i in paths) {
@@ -171,10 +171,8 @@ function scalePaths(paths, x_factor, y_factor, x_offset, y_offset) {
     for (i in positioned_paths) {
         coord_array = positioned_paths[i];
         for (j in coord_array) {
-            alert(coord_array[j]);
             coord_array[j].x = ((coord_array[j].x - (CANVAS_WIDTH / 2)) * factor) + (CANVAS_WIDTH / 2);
             coord_array[j].y = ((coord_array[j].y - (CANVAS_HEIGHT / 2)) * factor) + (CANVAS_HEIGHT / 2);
-            alert(coord_array[j].x);
         }
         scaled_paths.push(arrayToPath(coord_array));
     }
