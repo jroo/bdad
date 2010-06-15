@@ -1,0 +1,92 @@
+/*
+ * YUI Resect CSS version: 2.2.2 
+ * Copyright (c) 2007, Yahoo! Inc. All rights reserved.
+ * Licensed under the BSD License: http://developer.yahoo.net/yui/license.txt
+ */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,optgroup,button,p,blockquote,th,td{margin:0;padding:0;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}table{border-collapse:collapse;border-spacing:0;}caption,th{text-align:left;}ol,ul{list-style:none;}fieldset,img{border:0;}input,textarea,select,optgroup,option,button{font-family:inherit;font-size:100%;}button,input {width: auto;overflow: visible;}optgroup,address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym {border:0;}
+dl li{list-style: none;}
+
+a:link{outline: none; color: #000; text-decoration: none;}
+a:visited{outline: none; color: #000}
+a:hover{outline: none; color: #000}
+a:active{outline: none; color: #000}
+
+@font-face { font-family: "chunk-1"; src: url(../images/ChunkFive-Roman.otf) format("opentype"); font-style: normal; }
+
+.clear{ clear: both;}
+body { font-family: Georgia, Times, "Times New Roman", serif; }
+
+/*--------------------------- header*/
+
+#headerWrapper { background: #FCEDD6 url(../images/bg-top.jpg) top center no-repeat; }
+#header { width: 940px; padding-top: 35px; margin: 0 auto; }
+#top { width: 882px; margin: 0 auto; }
+#topleftswirl, #toprightswirl { width: 281px; height: 75px; float: left; margin-top: 10px; }
+h1 { width: 281px; height: 91px; float: left; display: block; margin: 0 19px; }
+h1 a { background: url(../images/logo-bdad.png) top left no-repeat; width: 281px; height: 91px; text-indent: -9999em; float: left;  }
+#stage { background: url(../images/img-frame-big.png) top left no-repeat; width: 645px; height: 480px; margin: 25px auto; padding: 60px 80px 70px; }
+h2 { background: url(../images/img-brassplate.png) top left no-repeat; width: 194px; height: 74px; margin: 0 auto; font-style: italic; color: #3B2314; font-weight: bold; text-align: center; padding: 20px 0 15px; font-size: .9em; text-shadow: 0 2px 0 #FFF; }
+h2 span { display: block; font-size: .8em; }
+#controls { border-top: #0054A4 1px solid; padding: 20px 0; margin-bottom: 20px; }
+#controls fieldset { float: left; color: #0054A4;  }
+#instructions { width: 180px; margin-right: 50px }
+#searching { width: 175px; margin-right: 40px }
+#names { width: 262px; margin-right: 40px }
+#undosave { width: 190px; }
+#controls label { font-family: "chunk-1","chunk-2",serif; margin-bottom: 8px; display: block; }
+#controls p { font-family: Helvetica, "Helvetica Neue", "Arial", sans-serif; font-size: 80%; line-height: 120%; margin-bottom: 20px; }
+#controls input { border: #0054A4 1px solid; color: #CCC; font-size: 70%; margin-right: 5px; float: left; font-family: Helvetica, "Helvetica Neue", Arial, sans-serif; padding: 2px; }
+#searchbox { width: 86px; height: 14px; }
+.searchBtn { background: url(../images/btn-search.png) top left no-repeat; width: 62px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; margin-top: 1px; cursor: pointer; }
+.searchBtn:hover { background: url(../images/btn-search.png) left -18px no-repeat; }
+#newdistrictlabel, #districtnamelabel, #submitlabel { padding-top: 20px; clear: both; }
+.newdistrict { background: url(../images/btn-newdistrict.png) top left no-repeat; width: 76px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; cursor: pointer; margin-right: 7px; }
+.newdistrict:hover { background: url(../images/btn-newdistrict.png) left -18px no-repeat; }
+.startover { background: url(../images/btn-startover.png) top left no-repeat; width: 76px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; cursor: pointer; }
+.startover:hover { background: url(../images/btn-startover.png) left -18px no-repeat; }
+#username, #districtname { width: 160px; }
+.enter { background: url(../images/btn-enter.png) top left no-repeat; width: 78px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; cursor: pointer;  }
+.enter:hover { background: url(../images/btn-enter.png) left -18px no-repeat; }
+.undo { background: url(../images/btn-undo.png) top left no-repeat; width: 76px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; cursor: pointer;  }
+.undo:hover { background: url(../images/btn-undo.png) left -18px no-repeat; }
+.submit { background: url(../images/btn-submit.png) top left no-repeat; width: 76px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; cursor: pointer;  }
+.submit:hover { background: url(../images/btn-submit.png) left -18px no-repeat; }
+
+
+/*---------------------------- gallery*/
+
+#galleryWrapper { background: #002154 url(../images/bg-middle.jpg) top left repeat-x; }
+#gallery { width: 960px; margin: 0 auto; padding: 30px 10px 20px; }
+#galleryTitle { margin: 0 auto 15px; width: 22.86em; }
+#midleftswirl, #midrightswirl { width: 76px; height: 20px; float: left; margin-top: 3px; }
+h3 { font-family: "chunk-1","chunk-2",serif; color: #FFF; font-size: 150%; display: block; margin: 0 10px; float: left; }
+.submission { float: left; margin: 10px 0px 15px; width: 240px; }
+.title, .artist { color: #FFF; padding-left: 10px; display: block; width: 220px; font-style: italic; }
+.title { font-size: 115%; }
+.artist { font-size: 90%; }
+.littleframe { background: url(../images/img-frame-small.png) 4px top no-repeat; width: 202px; height: 154px; padding: 13px 15px 17px; margin-bottom: 5px; }
+
+/*----------------------------- footer*/
+
+#footerWrapper { background: #3e1c01 url(../images/bg-bottom.jpg) top left repeat-x; }
+#footer { width: 960px; padding: 30px 0; margin: 0 auto; width: 28.4em; }
+#btmleftswirl, #btmrightswirl { width: 76px; height: 20px; float: left; }
+h4 { font-family: "chunk-1","chunk-2",serif; color: #7d481e; display: block; margin: 0 10px; float: left; padding-top: 2px; }
+
+/*------------------------------ draw*/
+
+#canvas_container {  
+    position:absolute;
+    width: 640px;
+    border: 3px solid #aaa;
+    background-color: transparent;
+    z-index:100;
+}
+
+#map_container {
+    position:relative;
+    z-index: 1;
+    width: 640px;
+    height: 480px;
+    background-color: #EEEEEE;
+}
