@@ -9,6 +9,7 @@ class ScreenDataController < ApplicationController
     end
   end
   
+  # An evil hybrid of create and update!
   def create
     screen_data = ScreenData.find_or_create_by_token(params[:t])
     unless screen_data

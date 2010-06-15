@@ -16,4 +16,8 @@ class SketchTest < ActiveSupport::TestCase
       sketch.svg
     )
   end
+  
+  test "convert relative pairs to absolute" do
+    
+  end
 end
