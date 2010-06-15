@@ -14,7 +14,7 @@ a:active{outline: none; color: #000}
 @font-face { font-family: "chunk-1"; src: url(../images/ChunkFive-Roman.otf) format("opentype"); font-style: normal; }
 
 .clear{ clear: both;}
-body { font-family: Georgia, Times, "Times New Roman", serif; }
+body { font-family: Georgia, Times, "Times New Roman", serif; background: #3e1c01; }
 
 /*--------------------------- header*/
 
