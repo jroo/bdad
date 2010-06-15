@@ -160,7 +160,9 @@ function drawDistrict(district_string) {
     state_id = dist_arr[0];
     district_id = dist_arr[0] + dist_arr[1];
     district = STATES.features[state_id.toString()].attributes.districts
-    alert(district_id);
+    bounds = DISTRICTS.features[district_id.toString()].bounds;
+    paths = DISTRICTS.features[district_id.toString()].paths;
+    alert(bounds);
 }
 
 //return path list centered on canvas
