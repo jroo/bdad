@@ -4,7 +4,7 @@ FIRST_Y = null;
 PATH = "";
 DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
 
-DOMAIN = '10.13.30.253:3000';
+DOMAIN = 'localhost:3000';
 
 CANVAS_WIDTH = 640;
 CANVAS_HEIGHT = 480;
@@ -225,5 +225,4 @@ function arrayToPath(path_array) {
 }
 
 function displaySaved(target_name, token) {
-
 }

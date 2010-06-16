@@ -8,6 +8,7 @@ class SketchesController < ApplicationController
   
   def new
     @district = get_district_from_id
+    @gallery_tokens = ScreenData.all(:order => "updated_at DESC", :limit => 8)
     @sketch = Sketch.new({
       :title       => "Draw Me a District for a Great Good",
       :user_id     => current_user.id,

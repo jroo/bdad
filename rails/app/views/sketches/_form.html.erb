@@ -26,7 +26,7 @@
 				<span>Population Est.</span>
 				<p id="popnumber">000,000,000</p>
 			</div>
-			<div id="awards">
+			<!--<div id="awards">
 				<ul>
 					<li class="active">Hometown Award</li>
 					<li></li>
@@ -37,7 +37,7 @@
 					<li></li>
 					<li></li>
 				</ul>
-			</div>
+			</div>-->
 			<div class="clear"></div>
 			<form id="controls">
 				<fieldset id="instructions">
@@ -88,46 +88,14 @@
 				<span id="midrightswirl"><%= image_tag "img-midright-swirl.png", :alt => "" %></span>
 				<div class="clear"></div>
 			</div> <!-- end galleryTitle -->
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
+		  <% @gallery_tokens.each do |screen_data| %>
+  			<dl class="submission">
+  				<a href="art.html"><dt class="littleframe" id="<%= "tiny_#{screen_data.token}" %>">
+  				<!-- image from submission goes here --></dt></a>
+  				<dd class="title">The Fighting Fifth</dd>
+  				<dd class="artist">by Anonymous</dd>
+  			</dl>
+		  <% end %>
 			<div class="clear"></div>
 		</div> <!-- end gallery -->
 	</div> <!-- end galleryWrapper -->

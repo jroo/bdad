@@ -17,13 +17,17 @@ class District < ActiveRecord::Base
   # 01 = 1st District
   # (from http://www.cs.princeton.edu/introcs/data/codes.csv)
   def code
-    "%02i%02i" % [FIPS_CODES[state], number]
+    unless state_fips && number
+      raise "Cannot construct 4 digit code without state_fips && number"
+    end
+    # "%02i%02i" % [state_fips.to_i, number.to_i]
+    four_digit_code = state_fips + number
+    puts "--- #{four_digit_code}"
+    four_digit_code
   end
   
   def self.find_random
-    district = District.first
-    raise "FAIL" unless district
-    district
+    District.find :first, :offset => rand(District.count)
   end
   
   def self.find_or_create_closest_by_zip(zip)
@@ -31,7 +35,7 @@ class District < ActiveRecord::Base
     raise "API lookup failed for districts for zip #{zip}" unless districts
     district = best_district(districts)
     state, number = district.state, district.number
-    District.find_or_create_by_number_and_state(number, state)
+    District.find_by_number_and_state(number, state)
   end
   
   protected

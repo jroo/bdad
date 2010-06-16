@@ -5,3 +5,10 @@
 #   
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Major.create(:name => 'Daley', :city => cities.first)
+
+District110.all.each do |d110|
+  District.create!(
+    :state_fips => d110.state,
+    :number     => d110.cd
+  )
+end

@@ -22,8 +22,7 @@ class ScreenDataController < ApplicationController
       return
     end
     screen_data.district_code = params[:district_code]
-    decoded_d = ActiveSupport::JSON.decode(params[:d])
-    screen_data.value = decoded_d['paths'].to_json
+    screen_data.value = params[:d]['paths'].to_json
     if screen_data.save
       render :text => response_hash(screen_data).to_json, :status => 200
     else
