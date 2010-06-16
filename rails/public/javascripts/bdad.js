@@ -44,7 +44,7 @@ $('document').ready(function() {
         saveShape(MAIN_CANVAS, PATH);
     });
     
-    TOKEN = document.getElementById('token').value;
+    TOKEN = document.getElementById('sketch_token').value;
     drawDistrict(document.getElementById('district_code').value, 'map_container');
 
 });
