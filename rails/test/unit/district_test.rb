@@ -6,7 +6,7 @@ class DistrictTest < ActiveSupport::TestCase
   end
   
   test "find closest by zip" do
-    actual = District.find_closest_by_zip(97209)
+    actual = District.find_or_create_closest_by_zip(97209)
     assert actual.is_a?(District)
     assert actual.state == "OR"
     assert actual.number == "1"

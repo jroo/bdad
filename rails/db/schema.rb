@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100615190012) do
+ActiveRecord::Schema.define(:version => 20100615212837) do
 
   create_table "cd110", :primary_key => "gid", :force => true do |t|
     t.string        "state",      :limit => 2
@@ -27,6 +27,13 @@ ActiveRecord::Schema.define(:version => 20100615190012) do
     t.datetime "updated_at"
   end
 
+  create_table "screen_datas", :force => true do |t|
+    t.text     "value"
+    t.string   "token",      :limit => 40
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "sketches", :force => true do |t|
     t.string   "title"
     t.integer  "user_id"
@@ -35,6 +42,7 @@ ActiveRecord::Schema.define(:version => 20100615190012) do
     t.datetime "updated_at"
     t.text     "screen_data"
     t.geometry "map_data",    :limit => nil
+    t.string   "token",       :limit => 40
   end
 
   create_table "states", :primary_key => "gid", :force => true do |t|

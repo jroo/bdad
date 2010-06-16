@@ -1,16 +1,13 @@
 LAST_MOVE = null;
 FIRST_X = null;
 FIRST_Y = null;
-LAST_X = null;
-LAST_Y = null;
 PATH = "";
-SHAPE_LIST = [];
+DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[]};
 
 DEBUG = false;
 
 CANVAS_WIDTH = 640;
 CANVAS_HEIGHT = 480;
-Y_SCALE = null;
 
 $('document').ready(function() {
     initializeStateList();
@@ -35,7 +32,7 @@ $('document').ready(function() {
         if(isDown) {
             var x = e.pageX - this.offsetLeft;
             var y = e.pageY - this.offsetTop;
-            registerPoint(MAIN_CANVAS, LAST_X, LAST_Y, x, y);
+            registerPoint(MAIN_CANVAS, x, y);
         }
     });
     $("#canvas_container").mousedown(function(e) {
@@ -56,39 +53,36 @@ function debug(debug_str) {
     }
 }
 
-function registerPoint(canvas, last_x, last_y, x,y) {
+function registerPoint(canvas, x, y) {
     if (LAST_MOVE == "M") {
-        x_rel = x - last_x;
-        y_rel = y - last_y;
-        PATH = PATH + " l " + x_rel + " " + y_rel;
-        LAST_X = x;
-        LAST_Y = y;
+        PATH = PATH + "L" + x + " " + y;
     } else {
-        PATH = PATH + " M " + x + " " + y;
+        PATH = PATH + "M" + x + " " + y;
         FIRST_X = x;
         FIRST_Y = y;
-        LAST_X = x;
-        LAST_Y = y;
         LAST_MOVE = "M";
     }
     drawPath(canvas, PATH);
 }
 
 function saveShape(canvas, path) {
-    SHAPE_LIST.push(path + "z");
+    DRAWING.path_list.push(path + "z");
     drawPath(canvas, path);
     LAST_MOVE = null;
     FIRST_X = null;
     FIRST_Y = null;
-    LAST_X = null;
-    LAST_Y = null;
     PATH = "";
+}
+
+function saveDrawing(drawing) {
+    descaled_paths = descalePaths(drawing.path_list, drawing.transform);
+    d = { 'map':descaled_paths };
 }
 
 function drawPath(canvas, path) {
     canvas.clear();
-    for (i in SHAPE_LIST) {
-        this_shape = canvas.path(SHAPE_LIST[i]);
+    for (i in DRAWING.path_list) {
+        this_shape = canvas.path(DRAWING.path_list[i]);
         this_shape.attr({'stroke-width':3, 'fill':'#FFCCCC', 'opacity':0.2});
     }
     drawing = canvas.path(PATH);
@@ -97,18 +91,16 @@ function drawPath(canvas, path) {
 }
 
 function clearPath(canvas) {
-    SHAPE_LIST = [];
+    DRAWING.path_list = [];
     PATH = "";
     LAST_MOVE = null;
-    LAST_X = null;
-    LAST_Y = null;
     canvas.clear();
     debug('');
 }
 
 function undo(canvas) {
     path=null;
-    SHAPE_LIST.pop();
+    DRAWING.path_list.pop();
     drawPath(canvas, path);
 }
 
@@ -132,16 +124,6 @@ function initializeStateList() {
         populateDistricts(this.value);
     }
 
-}
-
-function drawState(state_value) {
-    state_paths = STATES.features[state_value.toString()].paths;
-    center_state = centerScaleRegion(state_paths).path_list;
-    MAP_CANVAS.clear();
-    for (i in center_state) {
-        m = MAP_CANVAS.path(center_state[i]);
-        m.attr({'fill':'#CCCCFF'});
-    }
 }
 
 function populateDistricts(state_value) {
@@ -188,6 +170,31 @@ function scalePaths(paths, x_factor, y_factor, x_offset, y_offset, scale) {
     return({'attr':{'factor':factor, 'x_offset':x_offset, 'y_offset':y_offset, 'scale':scale}, 'paths':scaled_paths});
 }
 
+function descalePaths(scaled_paths, transform) {
+    //descale
+    refactor = 1/(transform.factor * transform.scale)
+    var descaled_paths = [];
+    for (i in scaled_paths) {
+        coord_array = pathToArray(scaled_paths[i]);
+        for (j in coord_array) {  
+            coord_array[j].x = parseInt(((coord_array[j].x - (CANVAS_WIDTH / 2)) * refactor) + (CANVAS_WIDTH / 2));
+            coord_array[j].y = parseInt(((coord_array[j].y - (CANVAS_HEIGHT / 2)) * refactor) + (CANVAS_HEIGHT / 2));
+        }
+        descaled_paths.push(coord_array);
+    }
+    
+    var positioned_paths = [];
+    for (i in descaled_paths) {
+        coord_array = descaled_paths[i];
+        for (j in coord_array) {
+            coord_array[j].x = coord_array[j].x - transform.x_offset;
+            coord_array[j].y = coord_array[j].y - transform.y_offset;
+        }
+        positioned_paths.push(arrayToPath(coord_array));
+    }
+    return(positioned_paths);
+}
+
 function drawDistrict(district_string) {
     dist_arr = district_string.split(',');
     state_id = dist_arr[0];
@@ -204,6 +211,7 @@ function drawDistrict(district_string) {
     x_factor = CANVAS_WIDTH / width;
     y_factor = CANVAS_HEIGHT / height;
     var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset, 0.6);
+    DRAWING.transform = new_paths.attr;
     drawSVG(MAP_CANVAS, new_paths.paths);
 }
 
@@ -235,6 +243,7 @@ function pathToArray(path) {
         y = coord_arr[1];
         path_array.push({'command':command, 'x':parseInt(x), 'y':parseInt(y)});
     }
+    debug(path_array);
     return(path_array);
 }
 
@@ -242,7 +251,7 @@ function pathToArray(path) {
 function arrayToPath(path_array) {
     path_string = "";
     for (i in path_array) {
-        path_string = path_string + path_array[i].command + " " + path_array[i].x + " " + path_array[i].y + " ";
+        path_string = path_string + path_array[i].command + path_array[i].x + " " + path_array[i].y;
     }
     path_string = path_string + "z";
     return path_string;

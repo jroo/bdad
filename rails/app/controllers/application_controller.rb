@@ -34,9 +34,4 @@ class ApplicationController < ActionController::Base
     session[:current_user_id] = User.create_random!.id
   end
   
-  def get_sketch
-    return unless params[:sketch_id]
-    Sketch.find_by_id(params[:sketch_id])
-  end
-
 end
