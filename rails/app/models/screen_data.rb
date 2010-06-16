@@ -49,8 +49,7 @@ class ScreenData < ActiveRecord::Base
   end
   
   def svg_from_hash
-    hash = ActiveSupport::JSON.decode(self.value)
-    hash['paths']
+    ActiveSupport::JSON.decode(self.value)
   end
   
   protected

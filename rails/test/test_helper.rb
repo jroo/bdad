@@ -35,4 +35,8 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  def parsed_response_body
+    raise "Expected response" unless @response
+    ActiveSupport::JSON.decode(@response.body)
+  end
 end
