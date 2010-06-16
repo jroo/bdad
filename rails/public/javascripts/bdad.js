@@ -1,19 +1,21 @@
 LAST_MOVE = null;
 FIRST_X = null;
 FIRST_Y = null;
-LAST_X = null;
-LAST_Y = null;
 PATH = "";
-SHAPE_LIST = [];
+DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
+DUMMY_TOKEN = 'jroo-test' + Math.random();
 
-// DEBUG = false;
+DEBUG = false;
+DOMAIN = '10.13.30.253:3000';
 
 CANVAS_WIDTH = 640;
 CANVAS_HEIGHT = 480;
-Y_SCALE = null;
 
 $('document').ready(function() {
-    initializeStateList();
+    if (DEBUG) {
+        initializeStateList();
+        $('#debug_select').show();
+    }
     
     var isDown = false;
     
@@ -35,7 +37,7 @@ $('document').ready(function() {
         if(isDown) {
             var x = e.pageX - this.offsetLeft;
             var y = e.pageY - this.offsetTop;
-            registerPoint(MAIN_CANVAS, LAST_X, LAST_Y, x, y);
+            registerPoint(MAIN_CANVAS, x, y);
         }
     });
     $("#canvas_container").mousedown(function(e) {
@@ -56,60 +58,56 @@ function debug(debug_str) {
     }
 }
 
-function registerPoint(canvas, last_x, last_y, x,y) {
+function registerPoint(canvas, x, y) {
     if (LAST_MOVE == "M") {
-        x_rel = x - last_x;
-        y_rel = y - last_y;
-        PATH = PATH + " l " + x_rel + " " + y_rel;
-        LAST_X = x;
-        LAST_Y = y;
+        current_move = "L" + x + " " + y;
+        PATH = PATH + current_move;
     } else {
-        PATH = PATH + " M " + x + " " + y;
+        current_move = "M" + x + " " + y;
+        PATH = PATH + current_move;
         FIRST_X = x;
         FIRST_Y = y;
-        LAST_X = x;
-        LAST_Y = y;
         LAST_MOVE = "M";
     }
-    drawPath(canvas, PATH);
+    drawSVG(canvas, DRAWING.path_list, PATH, DRAWING.attr);
 }
 
 function saveShape(canvas, path) {
-    SHAPE_LIST.push(path + "z");
-    drawPath(canvas, path);
+    canvas.clear();
+    debug(path);
+    if (path) {
+        DRAWING.path_list.push(path + "z");
+    }
+    drawSVG(canvas, DRAWING.path_list, null, DRAWING.attr);
+    saveDrawing(DRAWING);
     LAST_MOVE = null;
     FIRST_X = null;
     FIRST_Y = null;
-    LAST_X = null;
-    LAST_Y = null;
     PATH = "";
 }
 
-function drawPath(canvas, path) {
-    canvas.clear();
-    for (i in SHAPE_LIST) {
-        this_shape = canvas.path(SHAPE_LIST[i]);
-        this_shape.attr({'stroke-width':3, 'fill':'#FFCCCC', 'opacity':0.2});
-    }
-    drawing = canvas.path(PATH);
-    drawing.attr({'stroke-width':3, 'fill':'#FFCCCC', 'opacity':0.2});
-    debug(PATH);
+function saveDrawing(drawing) {
+    descaled_paths = descalePaths(drawing.path_list, drawing.transform, CANVAS_HEIGHT, CANVAS_WIDTH);
+    d = { 'paths':descaled_paths };
+    url = 'http://' + DOMAIN + '/screen_data/';
+    t = DUMMY_TOKEN;
+    data = { 'd':d, 't':t }
+    $.post(url, data, function(data) {
+        displaySaved('josh', DUMMY_TOKEN);
+    }, "json");
 }
 
 function clearPath(canvas) {
-    SHAPE_LIST = [];
+    DRAWING.path_list = [];
     PATH = "";
     LAST_MOVE = null;
-    LAST_X = null;
-    LAST_Y = null;
     canvas.clear();
-    debug('');
 }
 
 function undo(canvas) {
-    path=null;
-    SHAPE_LIST.pop();
-    drawPath(canvas, path);
+    DRAWING.path_list.pop();
+    drawSVG(canvas, DRAWING.path_list, null, DRAWING.attr);
+    saveDrawing(DRAWING);
 }
 
 function initializeStateList() {
@@ -134,16 +132,6 @@ function initializeStateList() {
 
 }
 
-function drawState(state_value) {
-    state_paths = STATES.features[state_value.toString()].paths;
-    center_state = centerScaleRegion(state_paths).path_list;
-    MAP_CANVAS.clear();
-    for (i in center_state) {
-        m = MAP_CANVAS.path(center_state[i]);
-        m.attr({'fill':'#CCCCFF'});
-    }
-}
-
 function populateDistricts(state_value) {
     district_list = STATES.features[state_value.toString()].attributes.districts;
     $('#district_select')
@@ -160,11 +148,12 @@ function populateDistricts(state_value) {
     }
     select = document.getElementById('district_select');
     select.onchange = function() {
-        drawDistrict(this.value);
+        drawDistrict(this.value, 'map_container');
     }
 }
 
-function scalePaths(paths, x_factor, y_factor, x_offset, y_offset, scale) {
+
+function scalePaths(paths, x_factor, y_factor, x_offset, y_offset, scale, canvas_height, canvas_width) {
     factor = Math.min(x_factor, y_factor);
     positioned_paths = [];
     for (i in paths) {
@@ -180,15 +169,46 @@ function scalePaths(paths, x_factor, y_factor, x_offset, y_offset, scale) {
     for (i in positioned_paths) {
         coord_array = positioned_paths[i];
         for (j in coord_array) {
-            coord_array[j].x = ((coord_array[j].x - (CANVAS_WIDTH / 2)) * factor * scale) + (CANVAS_WIDTH / 2);
-            coord_array[j].y = ((coord_array[j].y - (CANVAS_HEIGHT / 2)) * factor * scale) + (CANVAS_HEIGHT / 2);
+            coord_array[j].x = ((coord_array[j].x - (canvas_width / 2)) * factor * scale) + (canvas_width / 2);
+            coord_array[j].y = ((coord_array[j].y - (canvas_height / 2)) * factor * scale) + (canvas_height / 2);
         }
         scaled_paths.push(arrayToPath(coord_array));
     }
     return({'attr':{'factor':factor, 'x_offset':x_offset, 'y_offset':y_offset, 'scale':scale}, 'paths':scaled_paths});
 }
 
-function drawDistrict(district_string) {
+function descalePaths(scaled_paths, transform, canvas_height, canvas_width) {
+    //descale
+    refactor = 1/(transform.factor * transform.scale)
+    var descaled_paths = [];
+    for (i in scaled_paths) {
+        coord_array = pathToArray(scaled_paths[i]);
+        for (j in coord_array) {  
+            coord_array[j].x = parseInt(((coord_array[j].x - (canvas_width / 2)) * refactor) + (canvas_width / 2));
+            coord_array[j].y = parseInt(((coord_array[j].y - (canvas_height / 2)) * refactor) + (canvas_height / 2));
+        }
+        descaled_paths.push(coord_array);
+    }
+    
+    var positioned_paths = [];
+    for (i in descaled_paths) {
+        coord_array = descaled_paths[i];
+        for (j in coord_array) {
+            coord_array[j].x = parseInt(coord_array[j].x - transform.x_offset);
+            coord_array[j].y = parseInt(coord_array[j].y - transform.y_offset);
+        }
+        positioned_paths.push(arrayToPath(coord_array));
+    }
+    return(positioned_paths);
+}
+
+function drawDistrict(district_string, target_name) {    
+    target_height = $('#'+target_name).height();
+    target_width =  $('#'+target_name).width();
+    
+    target_x_mid = parseInt(target_width/2);
+    target_y_mid = parseInt(target_height/2);
+    
     dist_arr = district_string.split(',');
     state_id = dist_arr[0];
     district_id = dist_arr[0] + dist_arr[1];
@@ -197,22 +217,31 @@ function drawDistrict(district_string) {
     paths = DISTRICTS.features[district_id.toString()].paths;
     mid_x = (bounds.minX + bounds.maxX) / 2;
     mid_y = (bounds.minY + bounds.maxY) / 2;
-    x_offset = (CANVAS_WIDTH / 2) - mid_x;
-    y_offset = (CANVAS_HEIGHT / 2) - mid_y;
+    x_offset = target_x_mid - mid_x;
+    y_offset = target_y_mid - mid_y;
     width = bounds.maxX - bounds.minX;
     height = bounds.maxY - bounds.minY;
-    x_factor = CANVAS_WIDTH / width;
-    y_factor = CANVAS_HEIGHT / height;
-    var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset, 0.6);
-    drawSVG(MAP_CANVAS, new_paths.paths);
+    x_factor = target_width / width;
+    y_factor = target_height / height;
+    
+    var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset, 0.6, target_height, target_width);
+    DRAWING.transform = new_paths.attr;
+    drawSVG(MAP_CANVAS, new_paths.paths, null, {fill:'#CCCCFF', opacity:0.6 });
 }
 
-function drawSVG(canvas, paths) {
+function drawSVG(canvas, paths, path, attr) {
     canvas.clear();
     for (i in paths) {
-        m = canvas.path(paths[i]);
-        m.attr({'fill':'#CCCCFF'});
+        drawPath(canvas, paths[i], attr);
     }
+    if (path) {
+        drawPath(canvas, path, attr);
+    }
+}
+
+function drawPath(canvas, path, attr) {
+    m = canvas.path(path);
+    m.attr(attr);
 }
 
 //convert svg path to array of node elements
@@ -242,8 +271,16 @@ function pathToArray(path) {
 function arrayToPath(path_array) {
     path_string = "";
     for (i in path_array) {
-        path_string = path_string + path_array[i].command + " " + path_array[i].x + " " + path_array[i].y + " ";
+        path_string = path_string + path_array[i].command + path_array[i].x + " " + path_array[i].y;
     }
     path_string = path_string + "z";
     return path_string;
+}
+
+function displaySaved(target_name, token) {
+    url = 'http://' + DOMAIN + '/screen_data/';
+    t = token
+    data = { 'd':d, 't':t }
+    $.get(url, data, function(data) {
+    }, "json");
 }

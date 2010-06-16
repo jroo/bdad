@@ -24,25 +24,32 @@ body { font-family: Georgia, Times, "Times New Roman", serif; background: #3e1c0
 #topleftswirl, #toprightswirl { width: 281px; height: 75px; float: left; margin-top: 10px; }
 h1 { width: 281px; height: 91px; float: left; display: block; margin: 0 19px; }
 h1 a { background: url(../images/logo-bdad.png) top left no-repeat; width: 281px; height: 91px; text-indent: -9999em; float: left;  }
-#stage { background: url(../images/img-frame-big.png) top left no-repeat; width: 645px; height: 480px; margin: 25px auto; padding: 60px 80px 70px; }
-h2 { background: url(../images/img-brassplate.png) top left no-repeat; width: 184px; height: 54px; margin: 0 auto; font-style: italic; color: #3B2314; font-weight: bold; text-align: center; padding: 15px 30px 40px; font-size: .9em; text-shadow: 0 2px 0 #FFF; line-height: 100%; overflow: hidden; }
-h2 span { display: block; font-size: .8em; margin-top: 5px; overflow: hidden; }
+#stage { background: url(../images/img-frame-big.png) top left no-repeat; width: 645px; height: 480px; margin: 25px auto 10px; padding: 60px 80px 70px; }
+body#art #stage { margin: 25px auto 25px }
+h2 { background: url(../images/img-brassplate.png) top left no-repeat; width: 184px; height: 54px; margin: 0 auto 20px; font-style: italic; color: #3B2314; font-weight: bold; text-align: center; padding: 20px 30px 0px; font-size: .9em; text-shadow: 0 2px 0 #FFF; line-height: 100%; overflow: hidden; }
+h2 span { display: block; font-size: .8em; margin: 5px; overflow: hidden;  }
+#info { width: 250px; margin: 0 30px; display: block; font-family: "chunk-1","chunk-2", sans-serif; font-size: 130%; color: #0054A4; float: left; text-align: center; }
+#popnumber { margin: 10px 0 25px; }
+#awards { width: 600px; float: left; font-family: "chunk-1","chunk-2", sans-serif; color: #0054A4; }
+#awards li { background: url(../images/img-ribbon-grey.png) top left no-repeat; height: 40px; float: left; display: block; margin: 0 20px 10px 0; text-shadow: 0 2px 0 #FFF; padding: 10px 0 0 35px; }
+#awards li.active { background: url(../images/img-ribbon.png) top left no-repeat; }
 #controls { border-top: #0054A4 1px solid; padding: 20px 0; margin-bottom: 20px; }
 #controls fieldset { float: left; color: #0054A4;  }
-#instructions { width: 180px; margin-right: 50px; }
-#searching { width: 175px; margin-right: 40px; }
-#names { width: 262px; margin-right: 40px; }
-#undosave { width: 190px; }
+#instructions { width: 180px; margin-right: 60px; }
+#searching { width: 180px; margin-right: 100px; }
+#names { width: 180px; margin-right: 60px; }
+#undosave { width: 180px; }
+#drawingtools { width: 798px; margin: 0 auto; }
 #controls label { font-family: "chunk-1","chunk-2",serif; margin-bottom: 8px; display: block; }
 #controls p { font-family: Helvetica, "Helvetica Neue", "Arial", sans-serif; font-size: 80%; line-height: 120%; margin-bottom: 20px; }
 #controls input { border: #0054A4 1px solid; color: #AAA; font-size: 70%; margin-right: 5px; float: left; font-family: Helvetica, "Helvetica Neue", Arial, sans-serif; padding: 2px; }
 #searchbox { width: 86px; height: 14px; }
 .searchBtn { background: url(../images/btn-search.png) top left no-repeat; width: 62px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; margin-top: 1px; cursor: pointer; }
 .searchBtn:hover { background: url(../images/btn-search.png) left -18px no-repeat; }
-#newdistrictlabel, #districtnamelabel, #submitlabel { padding-top: 20px; clear: both; }
+#newdistrictlabel, #districtnamelabel { padding-top: 20px; clear: both; }
 .newdistrict { background: url(../images/btn-newdistrict.png) top left no-repeat; width: 76px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; cursor: pointer; margin-right: 7px; }
 .newdistrict:hover { background: url(../images/btn-newdistrict.png) left -18px no-repeat; }
-.startover { background: url(../images/btn-startover.png) top left no-repeat; width: 76px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; cursor: pointer; }
+.startover { background: url(../images/btn-startover.png) top left no-repeat; width: 76px; height: 18px; text-indent: -9999em; display: block; float: right; border: none; cursor: pointer; }
 .startover:hover { background: url(../images/btn-startover.png) left -18px no-repeat; }
 #username, #districtname { width: 160px; }
 .enter { background: url(../images/btn-enter.png) top left no-repeat; width: 78px; height: 18px; text-indent: -9999em; display: block; float: left; border: none; cursor: pointer;  }

@@ -9,8 +9,36 @@
 			<div id="stage">
 				<div id="canvas_container"></div>
 				<div id="map_container"></div>
+				<div id="background_container"></div>
 			</div>
+			<form>
+      <fieldset id="drawingtools">
+        <button class="undo" type="button" onclick="undo(MAIN_CANVAS)">
+          <span>Undo</span>
+        </button>
+        <button class="startover" type="button" onclick="clearPath(MAIN_CANVAS)">
+          <span>Start Over</span>
+        </button>
+      </fieldset>
+      </form>      
 			<h2>The Fighting Fifth<span>by Anonymous</span></h2>
+			<div id="info">
+				<span>Population Est.</span>
+				<p id="popnumber">000,000,000</p>
+			</div>
+			<div id="awards">
+				<ul>
+					<li class="active">Hometown Award</li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+			</div>
+			<div class="clear"></div>
 			<form id="controls">
 				<fieldset id="instructions">
 					<label>Instructions</label>
@@ -31,10 +59,6 @@
 						<span>New District</span>
 					</button>
 					<% end %>
-					<!-- TODO: verify this javascript works once canvas is wired up -->
-					<button class="startover" type="button" onclick="clearPath(MAIN_CANVAS)">
-						<span>Start Over</span>
-					</button>
 				</fieldset>
   		  <% form_for @sketch do |f| %>
 				<fieldset id="names">
@@ -44,12 +68,9 @@
 					<%= f.text_field :title, :id => "districtname", :maxlength => 40 %>
           <%= f.hidden_field :district_id %>
           <%= f.hidden_field :token %>
+          <%= hidden_field_tag :district_code, @district.code %>
 				</fieldset>
 				<fieldset id="undosave">
-					<label for="undo">Want To Fix Something</label>
-					<button class="undo" type="button" onclick="undo(MAIN_CANVAS)">
-						<span>Undo</span>
-					</button>
 					<label for="submit" id="submitlabel">Save My Drawing</label>
 					<button class="submit" type="submit">
 						<span>Submit</span>
