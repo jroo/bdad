@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100615212837) do
+ActiveRecord::Schema.define(:version => 20100615232051) do
 
   create_table "cd110", :primary_key => "gid", :force => true do |t|
     t.string        "state",      :limit => 2
@@ -28,10 +28,11 @@ ActiveRecord::Schema.define(:version => 20100615212837) do
   end
 
   create_table "screen_datas", :force => true do |t|
-    t.text     "value"
-    t.string   "token",      :limit => 40
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text          "value"
+    t.string        "token",      :limit => 40
+    t.datetime      "created_at"
+    t.datetime      "updated_at"
+    t.multi_polygon "map_data",   :limit => nil
   end
 
   create_table "sketches", :force => true do |t|

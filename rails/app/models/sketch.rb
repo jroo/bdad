@@ -3,19 +3,11 @@ class Sketch < ActiveRecord::Base
   belongs_to :user
   belongs_to :district
   
-  def convert_screen_to_gis
-    
-  end
+  before_save :get_path_data
   
-  def self.convert_svg_to_x_y_pairs(svg)
-    split = svg.split(/[Ml]/).select{|x| ! x.empty? }
-    split.collect!{|x| x.strip}
-    pairs = split.collect{|x| x.split(" ").collect{|y| y.to_i }}
-  end
-  
-  def svg
-    hash = ActiveSupport::JSON.decode screen_data
-    hash['map']['paths']
+  def get_path_data
+    screen_data = ScreenData.find_by_token(self.token)
+    self.screen_data, self.map_data = screen_data.value, screen_data.map_data
   end
   
   # def user_name
