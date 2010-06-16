@@ -5,11 +5,11 @@ class SketchTest < ActiveSupport::TestCase
     sketch = Sketch.new({:token => 'ABCDE', :title => 'Test Title'})
     data = ScreenData.create!({
       :token => 'ABCDE', 
-      :value => {'paths' => ['M 123 456 L 234 567z']}.to_json
+      :value => ['M 123 456 L 234 567z'].to_json
     })
     sketch.save
     sketch.reload
-    assert_equal %({"paths":["M 123 456 L 234 567z"]}), sketch.screen_data
+    assert_equal ['M 123 456 L 234 567z'].to_json, sketch.screen_data
     assert sketch.map_data.is_a?(MultiPolygon)
   end
 

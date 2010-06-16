@@ -3,20 +3,14 @@ FIRST_X = null;
 FIRST_Y = null;
 PATH = "";
 DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
-DUMMY_TOKEN = 'jroo-test' + Math.random();
 
-DEBUG = false;
 DOMAIN = '10.13.30.253:3000';
 
 CANVAS_WIDTH = 640;
 CANVAS_HEIGHT = 480;
 
 $('document').ready(function() {
-    if (DEBUG) {
-        initializeStateList();
-        $('#debug_select').show();
-    }
-    
+
     var isDown = false;
     
     //set up hotkeys
@@ -49,14 +43,11 @@ $('document').ready(function() {
         isDown = false;
         saveShape(MAIN_CANVAS, PATH);
     });
+    
+    TOKEN = document.getElementById('token').value;
+    drawDistrict(document.getElementById('district_code').value, 'map_container');
 
 });
-
-function debug(debug_str) {
-    if (DEBUG) {
-        $('#debug').html(debug_str);
-    }
-}
 
 function registerPoint(canvas, x, y) {
     if (LAST_MOVE == "M") {
@@ -74,7 +65,6 @@ function registerPoint(canvas, x, y) {
 
 function saveShape(canvas, path) {
     canvas.clear();
-    debug(path);
     if (path) {
         DRAWING.path_list.push(path + "z");
     }
@@ -90,10 +80,10 @@ function saveDrawing(drawing) {
     descaled_paths = descalePaths(drawing.path_list, drawing.transform, CANVAS_HEIGHT, CANVAS_WIDTH);
     d = { 'paths':descaled_paths };
     url = 'http://' + DOMAIN + '/screen_data/';
-    t = DUMMY_TOKEN;
-    data = { 'd':d, 't':t }
+    t = TOKEN;
+    data = { 'd':d, 't':t, 'district_code':document.getElementById('district_code').value }
     $.post(url, data, function(data) {
-        displaySaved('josh', DUMMY_TOKEN);
+        displaySaved('josh', TOKEN);
     }, "json");
 }
 
@@ -110,49 +100,6 @@ function undo(canvas) {
     saveDrawing(DRAWING);
 }
 
-function initializeStateList() {
-    $('#state_select')
-        .find('option')
-        .remove()
-        .end();
-    $('#state_select').
-        append($("<option></option>").
-        attr("value", null).
-        text(''));
-    for (i in STATES.features) {
-         $('#state_select').
-          append($("<option></option>").
-          attr("value", STATES.features[i].attributes.state).
-          text(STATES.features[i].attributes.name));
-    }
-    select = document.getElementById('state_select');
-    select.onchange = function() {
-        populateDistricts(this.value);
-    }
-
-}
-
-function populateDistricts(state_value) {
-    district_list = STATES.features[state_value.toString()].attributes.districts;
-    $('#district_select')
-        .find('option')
-        .remove()
-        .end();
-    for (i in district_list) {
-        district = district_list[i].replace(state_value, '');
-        district_value = state_value + "," + district;
-        $('#district_select').
-            append($("<option></option>").
-            attr("value", district_value).
-            text(district));
-    }
-    select = document.getElementById('district_select');
-    select.onchange = function() {
-        drawDistrict(this.value, 'map_container');
-    }
-}
-
-
 function scalePaths(paths, x_factor, y_factor, x_offset, y_offset, scale, canvas_height, canvas_width) {
     factor = Math.min(x_factor, y_factor);
     positioned_paths = [];
@@ -160,7 +107,7 @@ function scalePaths(paths, x_factor, y_factor, x_offset, y_offset, scale, canvas
         coord_array = pathToArray(paths[i]);
         for (j in coord_array) {
             coord_array[j].x = (coord_array[j].x + x_offset);
-            coord_array[j].y = (coord_array[j].y + y_offset);         
+            coord_array[j].y = (coord_array[j].y + y_offset);
         }
         positioned_paths.push(coord_array);
     }
@@ -183,7 +130,7 @@ function descalePaths(scaled_paths, transform, canvas_height, canvas_width) {
     var descaled_paths = [];
     for (i in scaled_paths) {
         coord_array = pathToArray(scaled_paths[i]);
-        for (j in coord_array) {  
+        for (j in coord_array) {
             coord_array[j].x = parseInt(((coord_array[j].x - (canvas_width / 2)) * refactor) + (canvas_width / 2));
             coord_array[j].y = parseInt(((coord_array[j].y - (canvas_height / 2)) * refactor) + (canvas_height / 2));
         }
@@ -202,17 +149,17 @@ function descalePaths(scaled_paths, transform, canvas_height, canvas_width) {
     return(positioned_paths);
 }
 
-function drawDistrict(district_string, target_name) {    
+function drawDistrict(district_string, target_name) {
+    state_id = district_string[0] + district_string[1];
+    district_id = district_string;
+    
     target_height = $('#'+target_name).height();
-    target_width =  $('#'+target_name).width();
+    target_width = $('#'+target_name).width();
     
     target_x_mid = parseInt(target_width/2);
     target_y_mid = parseInt(target_height/2);
     
-    dist_arr = district_string.split(',');
-    state_id = dist_arr[0];
-    district_id = dist_arr[0] + dist_arr[1];
-    district = STATES.features[state_id.toString()].attributes.districts
+    //district = STATES.features[state_id.toString()].attributes.districts
     bounds = DISTRICTS.features[district_id.toString()].bounds;
     paths = DISTRICTS.features[district_id.toString()].paths;
     mid_x = (bounds.minX + bounds.maxX) / 2;
@@ -278,9 +225,5 @@ function arrayToPath(path_array) {
 }
 
 function displaySaved(target_name, token) {
-    url = 'http://' + DOMAIN + '/screen_data/';
-    t = token
-    data = { 'd':d, 't':t }
-    $.get(url, data, function(data) {
-    }, "json");
+
 }
