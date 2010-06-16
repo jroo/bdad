@@ -8,7 +8,6 @@ class SketchesController < ApplicationController
   
   def new
     @district = get_district_from_id
-    puts "@district.id : #{@district.id}"
     @sketch = Sketch.new({
       :title       => "Draw Me a District for a Great Good",
       :user_id     => current_user.id,
