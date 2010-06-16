@@ -22,11 +22,12 @@
       </fieldset>
       </form>      
 			<h2>The Fighting Fifth<span>by Anonymous</span></h2>
+			<!--
 			<div id="info">
 				<span>Population Est.</span>
 				<p id="popnumber">000,000,000</p>
 			</div>
-			<!--<div id="awards">
+			<div id="awards">
 				<ul>
 					<li class="active">Hometown Award</li>
 					<li></li>
@@ -90,8 +91,8 @@
 			</div> <!-- end galleryTitle -->
 		  <% @gallery_tokens.each do |screen_data| %>
   			<dl class="submission">
-  				<a href="art.html"><dt class="littleframe" id="<%= "tiny_#{screen_data.token}" %>">
-  				<!-- image from submission goes here --></dt></a>
+  				<dt class="littleframe" id="<%= "tiny_#{screen_data.token}" %>">
+  				<!-- image from submission goes here --></dt>
   				<dd class="title">The Fighting Fifth</dd>
   				<dd class="artist">by Anonymous</dd>
   			</dl>

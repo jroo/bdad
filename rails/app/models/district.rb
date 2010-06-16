@@ -22,12 +22,40 @@ class District < ActiveRecord::Base
     end
     # "%02i%02i" % [state_fips.to_i, number.to_i]
     four_digit_code = state_fips + number
-    puts "--- #{four_digit_code}"
+    puts "\n\n--- #{four_digit_code}"
     four_digit_code
   end
   
   def self.find_random
     District.find :first, :offset => rand(District.count)
+  end
+
+  # 1807 # 
+  # 3711 # 
+  # 4818 # emoticon
+  # 0802 # Dragon
+  # 1703 # space invaders
+  # 0637 # dog
+  # 1308 # grandpa. add cane
+  # 2502 # Twitter fail whale
+  # 1205 # a head leaning back
+  # 3412 # 
+  # 0611 # turkey
+  # 5110 # 
+  DISTRICTS = %w(0611 1807 3711 4818 0802 1703 0637 1308 2502 1205 3412 5110)
+  
+  def self.find_fun_random
+    $counter ||= 0
+    $counter += 1
+    index = $counter % DISTRICTS.length
+    code = DISTRICTS[index]
+    s = code[0, 2]
+    n = code[2, 2]
+    puts "s : #{s.inspect}"
+    puts "n : #{n.inspect}"
+    d = District.find_by_state_fips_and_number(s, n)
+    puts d.inspect
+    d
   end
   
   def self.find_or_create_closest_by_zip(zip)
