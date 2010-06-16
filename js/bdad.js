@@ -2,7 +2,7 @@ LAST_MOVE = null;
 FIRST_X = null;
 FIRST_Y = null;
 PATH = "";
-DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[]};
+DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
 DUMMY_TOKEN = 'jroo-test' + Math.random();
 
 DEBUG = false;
@@ -64,12 +64,13 @@ function registerPoint(canvas, x, y) {
         FIRST_Y = y;
         LAST_MOVE = "M";
     }
-    drawPath(canvas, PATH);
+    drawSVG(canvas, DRAWING.path_list, PATH, DRAWING.attr);
 }
 
 function saveShape(canvas, path) {
+    canvas.clear();
     DRAWING.path_list.push(path + "z");
-    drawPath(canvas, path);
+    drawSVG(canvas, DRAWING.path_list, null, DRAWING.attr);
     LAST_MOVE = null;
     FIRST_X = null;
     FIRST_Y = null;
@@ -78,7 +79,7 @@ function saveShape(canvas, path) {
 
 function saveDrawing(drawing) {
     descaled_paths = descalePaths(drawing.path_list, drawing.transform);
-    d = { 'map':descaled_paths };
+    d = { 'paths':descaled_paths };
     url = 'http://' + DOMAIN + '/screen_data/';
     t = DUMMY_TOKEN;
     data = { 'd':d, 't':t }
@@ -86,29 +87,16 @@ function saveDrawing(drawing) {
     }, "json");
 }
 
-function drawPath(canvas, path) {
-    canvas.clear();
-    for (i in DRAWING.path_list) {
-        this_shape = canvas.path(DRAWING.path_list[i]);
-        this_shape.attr({'stroke-width':3, 'fill':'#FFCCCC', 'opacity':0.2});
-    }
-    drawing = canvas.path(PATH);
-    drawing.attr({'stroke-width':3, 'fill':'#FFCCCC', 'opacity':0.2});
-    debug(PATH);
-}
-
 function clearPath(canvas) {
     DRAWING.path_list = [];
     PATH = "";
     LAST_MOVE = null;
     canvas.clear();
-    debug('');
 }
 
 function undo(canvas) {
-    path=null;
     DRAWING.path_list.pop();
-    drawPath(canvas, path);
+    drawSVG(canvas, DRAWING.path_list, null, DRAWING.attr);
 }
 
 function initializeStateList() {
@@ -194,8 +182,8 @@ function descalePaths(scaled_paths, transform) {
     for (i in descaled_paths) {
         coord_array = descaled_paths[i];
         for (j in coord_array) {
-            coord_array[j].x = coord_array[j].x - transform.x_offset;
-            coord_array[j].y = coord_array[j].y - transform.y_offset;
+            coord_array[j].x = parseInt(coord_array[j].x - transform.x_offset);
+            coord_array[j].y = parseInt(coord_array[j].y - transform.y_offset);
         }
         positioned_paths.push(arrayToPath(coord_array));
     }
@@ -219,15 +207,22 @@ function drawDistrict(district_string) {
     y_factor = CANVAS_HEIGHT / height;
     var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset, 0.6);
     DRAWING.transform = new_paths.attr;
-    drawSVG(MAP_CANVAS, new_paths.paths);
+    drawSVG(MAP_CANVAS, new_paths.paths, null, {fill:'#CCCCFF', opacity:0.6 });
 }
 
-function drawSVG(canvas, paths) {
+function drawSVG(canvas, paths, path, attr) {
     canvas.clear();
     for (i in paths) {
-        m = canvas.path(paths[i]);
-        m.attr({'fill':'#CCCCFF'});
+        drawPath(canvas, paths[i], attr);
     }
+    if (path) {
+        drawPath(canvas, path, attr);
+    }
+}
+
+function drawPath(canvas, path, attr) {
+    m = canvas.path(path);
+    m.attr(attr);
 }
 
 //convert svg path to array of node elements
@@ -250,7 +245,6 @@ function pathToArray(path) {
         y = coord_arr[1];
         path_array.push({'command':command, 'x':parseInt(x), 'y':parseInt(y)});
     }
-    debug(path_array);
     return(path_array);
 }
 
