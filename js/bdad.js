@@ -3,7 +3,6 @@ FIRST_X = null;
 FIRST_Y = null;
 PATH = "";
 DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
-DUMMY_TOKEN = 'jroo-test' + Math.random();
 
 DOMAIN = '10.13.30.253:3000';
 
@@ -45,6 +44,7 @@ $('document').ready(function() {
         saveShape(MAIN_CANVAS, PATH);
     });
     
+    TOKEN = document.getElementById('token').value;
     drawDistrict(document.getElementById('district_code').value, 'map_container');
 
 });
@@ -80,10 +80,10 @@ function saveDrawing(drawing) {
     descaled_paths = descalePaths(drawing.path_list, drawing.transform, CANVAS_HEIGHT, CANVAS_WIDTH);
     d = { 'paths':descaled_paths };
     url = 'http://' + DOMAIN + '/screen_data/';
-    t = DUMMY_TOKEN;
+    t = TOKEN;
     data = { 'd':d, 't':t, 'district_code':document.getElementById('district_code').value }
     $.post(url, data, function(data) {
-        displaySaved('josh', DUMMY_TOKEN);
+        displaySaved('josh', TOKEN);
     }, "json");
 }
 
