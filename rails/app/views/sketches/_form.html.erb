@@ -68,6 +68,7 @@
 					<%= f.text_field :title, :id => "districtname", :maxlength => 40 %>
           <%= f.hidden_field :district_id %>
           <%= f.hidden_field :token %>
+          <%= hidden_field_tag :district_code, @district.code %>
 				</fieldset>
 				<fieldset id="undosave">
 					<label for="submit" id="submitlabel">Save My Drawing</label>
