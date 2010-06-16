@@ -44,8 +44,9 @@ $('document').ready(function() {
         saveShape(MAIN_CANVAS, PATH);
     });
     
-    TOKEN = document.getElementById('token').value;
-    drawDistrict(document.getElementById('district_code').value, 'map_container');
+    TOKEN = document.getElementById('sketch_token').value;
+    drawDistrict(document.getElementById('district_code').value, 'map_container', MAP_CANVAS);
+    displayStatic('da39a3ee5e6b4b0d3255bfef95601890afd80709', 'test_little');
 
 });
 
@@ -83,7 +84,7 @@ function saveDrawing(drawing) {
     t = TOKEN;
     data = { 'd':d, 't':t, 'district_code':document.getElementById('district_code').value }
     $.post(url, data, function(data) {
-        displaySaved('josh', TOKEN);
+        //displaySaved('josh', TOKEN);
     }, "json");
 }
 
@@ -149,7 +150,7 @@ function descalePaths(scaled_paths, transform, canvas_height, canvas_width) {
     return(positioned_paths);
 }
 
-function drawDistrict(district_string, target_name) {
+function drawDistrict(district_string, target_name, target_canvas) {
     state_id = district_string[0] + district_string[1];
     district_id = district_string;
     
@@ -159,7 +160,6 @@ function drawDistrict(district_string, target_name) {
     target_x_mid = parseInt(target_width/2);
     target_y_mid = parseInt(target_height/2);
     
-    //district = STATES.features[state_id.toString()].attributes.districts
     bounds = DISTRICTS.features[district_id.toString()].bounds;
     paths = DISTRICTS.features[district_id.toString()].paths;
     mid_x = (bounds.minX + bounds.maxX) / 2;
@@ -173,7 +173,8 @@ function drawDistrict(district_string, target_name) {
     
     var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset, 0.6, target_height, target_width);
     DRAWING.transform = new_paths.attr;
-    drawSVG(MAP_CANVAS, new_paths.paths, null, {fill:'#CCCCFF', opacity:0.6 });
+    drawSVG(target_canvas, new_paths.paths, null, {fill:'#CCCCFF', opacity:0.6 });
+    return({'x_factor':x_factor, 'y_factor':y_factor, 'x_offset':x_offset, 'y_offset':y_offset});
 }
 
 function drawSVG(canvas, paths, path, attr) {
@@ -224,6 +225,31 @@ function arrayToPath(path_array) {
     return path_string;
 }
 
-function displaySaved(target_name, token) {
+function displayStatic(token, target) {
+    
+    target = 'test_little';
+    tg=document.getElementById(target);
+    
+    var canvas = document.createElement("div");
+    canvas.className = "tiny_canvas";
+    
+    var map = document.createElement("div");
+    map.id = "tiny_map";
+    map.className = "tiny_map";
+    
+    var bg = document.createElement("div");
+    bg.className = "tiny_background";
+    
+    tg.appendChild(canvas);
 
+      
+    tg.appendChild(map);
+    m = new Raphael(document.getElementById("tiny_map"), $('#tiny_map').width(), $('#tiny_map').height());
+    offsets = drawDistrict("0601", 'tiny_map', m);
+    //scaled_paths = scalePaths(test_paths, offsets.x_factor, offsets.y_factor, offsets.x_offset, offsets.y_offset, 0.6, $('#tiny_map').height(), $('#tiny_map').width());
+
+    c = new Raphael(document.getElementById("tiny_canvas"), $('#tiny_canvas').width(), $('#tiny_canvas').height());
+    //drawSVG(c, scaled_paths, null, DRAWING.attr)
+
+    tg.appendChild(bg);
 }
