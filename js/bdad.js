@@ -3,8 +3,10 @@ FIRST_X = null;
 FIRST_Y = null;
 PATH = "";
 DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[]};
+DUMMY_TOKEN = 'jroo-test' + Math.random();
 
 DEBUG = false;
+DOMAIN = '10.13.30.253:3000';
 
 CANVAS_WIDTH = 640;
 CANVAS_HEIGHT = 480;
@@ -77,6 +79,11 @@ function saveShape(canvas, path) {
 function saveDrawing(drawing) {
     descaled_paths = descalePaths(drawing.path_list, drawing.transform);
     d = { 'map':descaled_paths };
+    url = 'http://' + DOMAIN + '/screen_data/';
+    t = DUMMY_TOKEN;
+    data = { 'd':d, 't':t }
+    $.post(url, data, function(data) {
+    }, "json");
 }
 
 function drawPath(canvas, path) {
