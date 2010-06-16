@@ -1,6 +1,20 @@
 require 'test_helper'
 
 class ScreenDataTest < ActiveSupport::TestCase
+  test "Handle 2 NaN pairs" do
+    assert_equal(
+      [[]],
+      ScreenData.convert_svg_to_x_y_pairs("MNaN NaNLNaN NaNz")
+    )
+  end
+
+  test "Handle 1 NaN pair" do
+    assert_equal(
+      [[]],
+      ScreenData.convert_svg_to_x_y_pairs("MNaN NaNz")
+    )
+  end
+  
   test "convert svg to x y pairs" do
     assert_equal(
       [[[281, 200], [-5, 2], [-16, 7]]], 
