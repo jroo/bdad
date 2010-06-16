@@ -5,7 +5,7 @@ class ScreenDataController < ApplicationController
     if screen_data
       render :text => screen_data.value
     else
-      render :text => "404", :status => 404
+      render :text => "", :status => 404
     end
   end
   
@@ -18,9 +18,9 @@ class ScreenDataController < ApplicationController
     end
     screen_data.value = params[:d]
     if screen_data.save
-      render :text => "200", :status => 200
+      render :text => "", :status => 200
     else
-      render :text => "404", :status => 404
+      render :text => "", :status => 404
     end
   end
 
