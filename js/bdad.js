@@ -2,7 +2,7 @@ LAST_MOVE = null;
 FIRST_X = null;
 FIRST_Y = null;
 PATH = "";
-SCALE = 0.8;
+SCALE = 0.6;
 DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
 
 DOMAIN = '10.13.30.253:3000';
@@ -181,7 +181,8 @@ function drawDistrict(district_string, target_name, target_canvas) {
 
 function drawStateDistricts(state_id, districts_target, state_target, transform) {
     state_id = parseInt(state_id).toString();
-    districts = STATES.features[state_id].attributes.districts;
+    //districts = STATES.features[state_id].attributes.districts;
+    districts = DISTRICTS.features;
     t_height = $('#'+districts_target).height();
     t_width = $('#'+districts_target).width();
 
@@ -189,23 +190,34 @@ function drawStateDistricts(state_id, districts_target, state_target, transform)
     c = new Raphael(document.getElementById(districts_target), t_width, t_height);
     paths = [];
     for (i in districts) {
-        districts[i] = zeroPad(districts[i], 4);
-        scaled_paths = scalePaths(DISTRICTS.features[districts[i]].paths,
+        scaled_paths = scalePaths(DISTRICTS.features[i].paths,
             transform.x_factor, transform.y_factor, transform.x_offset,
             transform.y_offset, SCALE, t_height, t_width);
-        for (i in scaled_paths.paths) {
-            paths.push(scaled_paths.paths[i]);
+        //districts[i] = zeroPad(districts[i], 4);
+        /*scaled_paths = scalePaths(DISTRICTS.features[districts[i]].paths,
+            transform.x_factor, transform.y_factor, transform.x_offset,
+            transform.y_offset, SCALE, t_height, t_width);*/
+        for (j in scaled_paths.paths) {
+            paths.push(scaled_paths.paths[j]);
         }
     }
     drawSVG(c, paths, null, {opacity:0.1})
 
-    //draw state outline
-    s = new Raphael(document.getElementById(state_target), t_width, t_height);
-    state_scaled_paths = scalePaths(STATES.features[state_id].paths,
-        transform.x_factor, transform.y_factor, transform.x_offset,
-        transform.y_offset, SCALE, t_height, t_width);
+    //draw state outlines
 
-    drawSVG(s, state_scaled_paths.paths, null, {'stroke-width':8, 'fill-opacity':0, 'opacity':0.1});
+    states = STATES.features;
+
+    s = new Raphael(document.getElementById(state_target), t_width, t_height);
+    state_paths = [];
+    for (i in states) {
+        state_scaled_paths = scalePaths(STATES.features[i].paths,
+            transform.x_factor, transform.y_factor, transform.x_offset,
+            transform.y_offset, SCALE, t_height, t_width);
+        for (j in state_scaled_paths.paths) {
+            state_paths.push(state_scaled_paths.paths[j]);
+        }
+    }
+    drawSVG(s, state_paths, null, {'stroke-width':8, 'fill-opacity':0, 'opacity':0.1});
 }
 
 function drawSVG(canvas, paths, path, attr) {
