@@ -2,6 +2,7 @@ LAST_MOVE = null;
 FIRST_X = null;
 FIRST_Y = null;
 PATH = "";
+SCALE = 0.8;
 DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
 
 DOMAIN = '10.13.30.253:3000';
@@ -45,7 +46,10 @@ $('document').ready(function() {
     });
     
     TOKEN = document.getElementById('sketch_token').value;
-    drawDistrict(document.getElementById('district_code').value, 'map_container', MAP_CANVAS);
+    district_code = document.getElementById('district_code').value;
+    state_id = district_code.substring(0,2);
+    transform = drawDistrict(district_code, 'map_container', MAP_CANVAS);
+    drawStateDistricts(state_id, 'districts_container', 'background_container', transform);
     displayStatic('da39a3ee5e6b4b0d3255bfef95601890afd80709', 'test_little');
 
 });
@@ -151,8 +155,7 @@ function descalePaths(scaled_paths, transform, canvas_height, canvas_width) {
 }
 
 function drawDistrict(district_string, target_name, target_canvas) {
-    state_id = district_string[0] + district_string[1];
-    district_id = district_string;
+    state_id = district_string.substring(0,2);
     
     target_height = $('#'+target_name).height();
     target_width = $('#'+target_name).width();
@@ -160,8 +163,8 @@ function drawDistrict(district_string, target_name, target_canvas) {
     target_x_mid = parseInt(target_width/2);
     target_y_mid = parseInt(target_height/2);
     
-    bounds = DISTRICTS.features[district_id.toString()].bounds;
-    paths = DISTRICTS.features[district_id.toString()].paths;
+    bounds = DISTRICTS.features[district_string].bounds;
+    paths = DISTRICTS.features[district_string].paths;
     mid_x = (bounds.minX + bounds.maxX) / 2;
     mid_y = (bounds.minY + bounds.maxY) / 2;
     x_offset = target_x_mid - mid_x;
@@ -171,10 +174,39 @@ function drawDistrict(district_string, target_name, target_canvas) {
     x_factor = target_width / width;
     y_factor = target_height / height;
     
-    var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset, 0.6, target_height, target_width);
+    var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset, SCALE, target_height, target_width);
     DRAWING.transform = new_paths.attr;
     drawSVG(target_canvas, new_paths.paths, null, {fill:'#CCCCFF', opacity:0.6 });
     return({'x_factor':x_factor, 'y_factor':y_factor, 'x_offset':x_offset, 'y_offset':y_offset});
+}
+
+function drawStateDistricts(state_id, districts_target, state_target, transform) {
+    state_id = parseInt(state_id).toString();
+    districts = STATES.features[state_id].attributes.districts;
+    t_height = $('#'+districts_target).height();
+    t_width = $('#'+districts_target).width();
+    
+    //draw districts
+    c = new Raphael(document.getElementById(districts_target), t_width, t_height);
+    paths = [];
+    for (i in districts) {
+        districts[i] = zeroPad(districts[i], 4);
+        scaled_paths = scalePaths(DISTRICTS.features[districts[i]].paths,
+            transform.x_factor, transform.y_factor, transform.x_offset, 
+            transform.y_offset, SCALE, t_height, t_width);
+        for (i in scaled_paths.paths) {
+            paths.push(scaled_paths.paths[i]);
+        }
+    }
+    drawSVG(c, paths, null, {opacity:0.1})
+    
+    //draw state outline
+    s = new Raphael(document.getElementById(state_target), t_width, t_height);
+    state_scaled_paths = scalePaths(STATES.features[state_id].paths,
+        transform.x_factor, transform.y_factor, transform.x_offset, 
+        transform.y_offset, SCALE, t_height, t_width);       
+        
+    drawSVG(s, state_scaled_paths.paths, null, {'stroke-width':8, 'fill-opacity':0, 'opacity':0.1});
 }
 
 function drawSVG(canvas, paths, path, attr) {
@@ -246,10 +278,21 @@ function displayStatic(token, target) {
     tg.appendChild(map);
     m = new Raphael(document.getElementById("tiny_map"), $('#tiny_map').width(), $('#tiny_map').height());
     offsets = drawDistrict("0601", 'tiny_map', m);
-    //scaled_paths = scalePaths(test_paths, offsets.x_factor, offsets.y_factor, offsets.x_offset, offsets.y_offset, 0.6, $('#tiny_map').height(), $('#tiny_map').width());
+    //drawStateDistricts(state_id, 'districts_container', 'background_container', transform);
+    
+    //scaled_paths = scalePaths(test_paths, offsets.x_factor, offsets.y_factor, offsets.x_offset, offsets.y_offset, SCALE, $('#tiny_map').height(), $('#tiny_map').width());
 
     c = new Raphael(document.getElementById("tiny_canvas"), $('#tiny_canvas').width(), $('#tiny_canvas').height());
     //drawSVG(c, scaled_paths, null, DRAWING.attr)
 
     tg.appendChild(bg);
+}
+
+function zeroPad(num,count) {
+    //from http://sujithcjose.blogspot.com/2007/10/zero-padding-in-java-script-to-add.html
+    var numZeropad = num + '';
+    while(numZeropad.length < count) {
+        numZeropad = "0" + numZeropad;
+    }
+    return numZeropad;
 }
