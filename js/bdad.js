@@ -2,7 +2,7 @@ LAST_MOVE = null;
 FIRST_X = null;
 FIRST_Y = null;
 PATH = "";
-SCALE = 0.6;
+SCALE = 0.2;
 DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
 
 DOMAIN = '10.13.30.253:3000';
@@ -50,7 +50,6 @@ $('document').ready(function() {
     state_id = district_code.substring(0,2);
     transform = drawDistrict(district_code, 'map_container', MAP_CANVAS);
     drawStateDistricts(state_id, 'districts_container', 'background_container', transform);
-    displayStatic('da39a3ee5e6b4b0d3255bfef95601890afd80709', 'test_little');
 
 });
 
@@ -267,37 +266,6 @@ function arrayToPath(path_array) {
     }
     path_string = path_string + "z";
     return path_string;
-}
-
-function displayStatic(token, target) {
-    
-    target = 'test_little';
-    tg=document.getElementById(target);
-    
-    var canvas = document.createElement("div");
-    canvas.className = "tiny_canvas";
-    
-    var map = document.createElement("div");
-    map.id = "tiny_map";
-    map.className = "tiny_map";
-    
-    var bg = document.createElement("div");
-    bg.className = "tiny_background";
-    
-    tg.appendChild(canvas);
-
-      
-    tg.appendChild(map);
-    m = new Raphael(document.getElementById("tiny_map"), $('#tiny_map').width(), $('#tiny_map').height());
-    offsets = drawDistrict("0601", 'tiny_map', m);
-    //drawStateDistricts(state_id, 'districts_container', 'background_container', transform);
-    
-    //scaled_paths = scalePaths(test_paths, offsets.x_factor, offsets.y_factor, offsets.x_offset, offsets.y_offset, SCALE, $('#tiny_map').height(), $('#tiny_map').width());
-
-    c = new Raphael(document.getElementById("tiny_canvas"), $('#tiny_canvas').width(), $('#tiny_canvas').height());
-    //drawSVG(c, scaled_paths, null, DRAWING.attr)
-
-    tg.appendChild(bg);
 }
 
 function zeroPad(num,count) {
