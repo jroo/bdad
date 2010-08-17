@@ -81,7 +81,7 @@ function saveShape(canvas, path) {
 }
 
 function saveDrawing(drawing) {
-    alert(drawing.transform.x_offset + ", " + drawing.transform.y_offset);
+    // alert(drawing.transform.x_offset + ", " + drawing.transform.y_offset);
     descaled_paths = descalePaths(drawing.path_list, drawing.transform, CANVAS_HEIGHT, CANVAS_WIDTH);
     d = { 'paths':descaled_paths };
     url = 'http://' + DOMAIN + '/screen_data/';
