@@ -81,12 +81,11 @@ function saveShape(canvas, path) {
 }
 
 function saveDrawing(drawing) {
-    alert(drawing.transform.x_offset + ", " + drawing.transform.y_offset);
     descaled_paths = descalePaths(drawing.path_list, drawing.transform, CANVAS_HEIGHT, CANVAS_WIDTH);
     d = { 'paths':descaled_paths };
     url = 'http://' + DOMAIN + '/screen_data/';
     t = TOKEN;
-    data = { 'd':d, 't':t, 'district_code':document.getElementById('district_code').value }
+    data = { 'd':d, 't':t, 'offset':{'x':x_offset, 'y':y_offset}, 'district_code':document.getElementById('district_code').value };
     $.post(url, data, function(data) {
         //displaySaved('josh', TOKEN);
     }, "json");
