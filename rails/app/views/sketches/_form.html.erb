@@ -9,8 +9,10 @@
 			<div id="stage">
 				<div id="canvas_container"></div>
 				<div id="map_container"></div>
+				<div id="districts_container"></div>
 				<div id="background_container"></div>
 			</div>
+            <div id="debug"></div>
 			<form>
       <fieldset id="drawingtools">
         <button class="undo" type="button" onclick="undo(MAIN_CANVAS)">
@@ -22,7 +24,6 @@
       </fieldset>
       </form>      
 			<h2>The Fighting Fifth<span>by Anonymous</span></h2>
-			<!--
 			<div id="info">
 				<span>Population Est.</span>
 				<p id="popnumber">000,000,000</p>
@@ -38,7 +39,7 @@
 					<li></li>
 					<li></li>
 				</ul>
-			</div>-->
+			</div>
 			<div class="clear"></div>
 			<form id="controls">
 				<fieldset id="instructions">
@@ -73,7 +74,7 @@
 				</fieldset>
 				<fieldset id="undosave">
 					<label for="submit" id="submitlabel">Save My Drawing</label>
-					<button class="submit" type="submit">
+					<button class="submit" type="submit" onclick="saveDrawing(DRAWING)">
 						<span>Submit</span>
 					</button>
 				</fieldset>
