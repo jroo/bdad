@@ -2,7 +2,7 @@ LAST_MOVE = null;
 FIRST_X = null;
 FIRST_Y = null;
 PATH = "";
-SCALE = 0.2;
+SCALE = 0.6;
 DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
 
 DOMAIN = '10.13.30.253:3000';
@@ -81,6 +81,7 @@ function saveShape(canvas, path) {
 }
 
 function saveDrawing(drawing) {
+    alert(drawing.transform.x_offset + ", " + drawing.transform.y_offset);
     descaled_paths = descalePaths(drawing.path_list, drawing.transform, CANVAS_HEIGHT, CANVAS_WIDTH);
     d = { 'paths':descaled_paths };
     url = 'http://' + DOMAIN + '/screen_data/';
