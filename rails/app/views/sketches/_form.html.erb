@@ -1,151 +1,121 @@
 <div id="headerWrapper">
-		<div id="header">
-			<div id="top">
-				<span id="topleftswirl"><%= image_tag "img-topleft-swirl.png", :alt => "" %></span>
-				<h1><%= link_to "Better Draw A District", root_path %></h1>
-				<span id="toprightswirl"><%= image_tag "img-topright-swirl.png", :alt => "" %></span>
-				<div class="clear"></div>
-			</div> <!-- end top -->
-			<div id="stage">
-				<div id="canvas_container"></div>
-				<div id="map_container"></div>
-				<div id="background_container"></div>
-			</div>
-			<form>
-      <fieldset id="drawingtools">
-        <button class="undo" type="button" onclick="undo(MAIN_CANVAS)">
-          <span>Undo</span>
-        </button>
-        <button class="startover" type="button" onclick="clearPath(MAIN_CANVAS)">
-          <span>Start Over</span>
-        </button>
-      </fieldset>
-      </form>      
-			<h2>The Fighting Fifth<span>by Anonymous</span></h2>
-			<div id="info">
-				<span>Population Est.</span>
-				<p id="popnumber">000,000,000</p>
-			</div>
-			<div id="awards">
-				<ul>
-					<li class="active">Hometown Award</li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-				</ul>
-			</div>
-			<div class="clear"></div>
-			<form id="controls">
-				<fieldset id="instructions">
-					<label>Instructions</label>
-					<p>Ever think that districts are weird, even non-sensical shapes? Us, too! We decided to give you the power to have some fun with them. So pick a district, add your artist tag, and give it a killer name. When you’re done save it to our gallery. And of course have fun!</p>
-				</fieldset>
-				<fieldset id="searching">
-				  <% form_tag :action => :locate_district, :method => :get do -%>
-          <label for="searchbox">Search For A District</label>
-					<input id="searchbox" name="zip" type="text" value="Enter Zip Code"/>
-					<button class="searchBtn" type="submit">
-						<span>Search</span>
-  					</button>
+    <div id="header">
+      <div id="top">
+        <span id="topleftswirl"><%= image_tag "img-topleft-swirl.png", :alt => "" %></span>
+        <h1><%= link_to "Better Draw A District", root_path %></h1>
+        <span id="toprightswirl"><%= image_tag "img-topright-swirl.png", :alt => "" %></span>
+        <div class="clear"></div>
+      </div> <!-- end top -->
+      <div id="stage">
+        <div id="canvas_container"></div>
+        <div id="map_container"></div>
+        <div id="districts_container"></div>
+        <div id="background_container"></div>
+      </div>
+      <div id="debug"></div>
+      <form>
+        <fieldset id="drawingtools">
+          <button class="undo" type="button" onclick="undo(MAIN_CANVAS)">
+            <span>Undo</span>
+          </button>
+          <button class="startover" type="button" onclick="clearPath(MAIN_CANVAS)">
+            <span>Start Over</span>
+          </button>
+        </fieldset>
+      </form>
+      <h2>The Fighting Fifth<span>by Anonymous</span></h2>
+      <div id="info">
+        <span>Population Est.</span>
+        <p id="popnumber">000,000,000</p>
+      </div>
+      <div id="awards">
+        <ul>
+          <li class="active">Hometown Award</li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+      <div class="clear"></div>
+      <div id="controls">
+        <fieldset id="instructions">
+          <label>Instructions</label>
+          <p>Ever think that districts are weird, even non-sensical shapes? Us, too! We decided to give you the power to have some fun with them. So pick a district, add your artist tag, and give it a killer name. When you’re done save it to our gallery. And of course have fun!</p>
+        </fieldset>
+        <fieldset id="searching">
+          <% form_tag :action => :locate_district, :method => :get do -%>
+            <label for="searchbox">Search For A District</label>
+            <input id="searchbox" name="zip" type="text" value="Enter Zip Code"/>
+            <button class="searchBtn" type="submit">
+              <span>Search</span>
+            </button>
           <% end %>
-
-					<label for="newdistrict" id="newdistrictlabel">Keep On Drawing</label>
-					<% form_tag new_sketch_path, :method => :get do -%>
-					<button class="newdistrict" type="submit">
-						<span>New District</span>
-					</button>
-					<% end %>
-				</fieldset>
-  		  <% form_for @sketch do |f| %>
-				<fieldset id="names">
-          <label for="username">Artist's Name</label>
-          <%= text_field_tag "user_name", @current_user.name, :id => "username", :maxlength => 21 %>
-          <label for="districtname" id="districtnamelabel">District's Name</label>
-					<%= f.text_field :title, :id => "districtname", :maxlength => 40 %>
-          <%= f.hidden_field :district_id %>
-          <%= f.hidden_field :token %>
-          <%= hidden_field_tag :district_code, @district.code %>
-				</fieldset>
-				<fieldset id="undosave">
-					<label for="submit" id="submitlabel">Save My Drawing</label>
-					<button class="submit" type="submit">
-						<span>Submit</span>
-					</button>
-				</fieldset>
-  			<% end %>
-			<div class="clear"></div>
-		</div> <!-- end header -->
-	</div> <!-- end headerWrapper -->
-	<div id="galleryWrapper">
-		<div id="gallery">
-			<div id="galleryTitle">
-				<span id="midleftswirl"><%= image_tag "img-midleft-swirl.png", :alt => "" %></span>
-				<h3>Drawing Gallery</h3>
-				<span id="midrightswirl"><%= image_tag "img-midright-swirl.png", :alt => "" %></span>
-				<div class="clear"></div>
-			</div> <!-- end galleryTitle -->
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<dl class="submission">
-				<a href="art.html"><dt class="littleframe"><!-- image from submission goes here --></dt></a>
-				<dd class="title">The Fighting Fifth</dd>
-				<dd class="artist">by Anonymous</dd>
-			</dl>
-			<div class="clear"></div>
-		</div> <!-- end gallery -->
-	</div> <!-- end galleryWrapper -->
-	<div id="footerWrapper">
-		<div id="footer">
-			<span id="btmleftswirl"><%= image_tag "img-bottomleft-swirl.png", :alt => "" %></span>
-			<h4 title="In it to win it!">©2010 Sunlight Labs Olympic Team</h4>
-			<span id="btmrightswirl"><%= image_tag "img-bottomright-swirl.png", :alt => "" %></span>
-			<div class="clear"></div>
-		</div> <!-- end footer -->
-	</div> <!-- end footerWrapper -->
-	<%= javascript_include_tag "raphael-min.js" %>
-	<%= javascript_include_tag "jquery-1.4.2.min.js" %>
-	<%= javascript_include_tag "jquery.hotkeys-0.7.9.min.js" %>
-	<%= javascript_include_tag "bdad.js" %>
-	<%= javascript_include_tag "states.js" %>
-	<%= javascript_include_tag "districts.js" %>
-	<script type="text/javascript" src="http://use.typekit.com/jam6fyv.js"></script>
-	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-	<!--[if IE 6]><link rel="stylesheet" href="buggy.css" type="text/css" media="screen" /><![endif]-->
-	<!--[if IE 7]><link rel="stylesheet" href="buggy7.css" type="text/css" media="screen" /><![endif]-->
+          <label for="newdistrict" id="newdistrictlabel">Keep On Drawing</label>
+          <% form_tag new_sketch_path, :method => :get do -%>
+            <button class="newdistrict" type="submit">
+              <span>New District</span>
+            </button>
+          <% end %>
+        </fieldset>
+        <% form_for @sketch do |f| %>
+          <fieldset id="names">
+            <label for="username">Artist's Name</label>
+            <%= text_field_tag "user_name", @current_user.name, :id => "username", :maxlength => 21 %>
+            <label for="districtname" id="districtnamelabel">District's Name</label>
+            <%= f.text_field :title, :id => "districtname", :maxlength => 40 %>
+            <%= f.hidden_field :district_id %>
+            <%= f.hidden_field :token %>
+            <%= hidden_field_tag :district_code, @district.code %>
+          </fieldset>
+          <fieldset id="undosave">
+            <label for="submit" id="submitlabel">Save My Drawing</label>
+            <button class="submit" type="submit" onclick="saveDrawing(DRAWING)">
+              <span>Submit</span>
+            </button>
+          </fieldset>
+        <% end %>
+      </form>
+      <div class="clear"></div>
+    </div> <!-- end header -->
+  </div> <!-- end headerWrapper -->
+  <div id="galleryWrapper">
+    <div id="gallery">
+      <div id="galleryTitle">
+        <span id="midleftswirl"><%= image_tag "img-midleft-swirl.png", :alt => "" %></span>
+        <h3>Drawing Gallery</h3>
+        <span id="midrightswirl"><%= image_tag "img-midright-swirl.png", :alt => "" %></span>
+        <div class="clear"></div>
+      </div> <!-- end galleryTitle -->
+      <% @gallery_tokens.each do |screen_data| %>
+        <dl class="submission">
+          <dt class="littleframe" id="<%= "tiny_#{screen_data.token}" %>">
+          <!-- image from submission goes here --></dt>
+          <dd class="title">The Fighting Fifth</dd>
+          <dd class="artist">by Anonymous</dd>
+        </dl>
+      <% end %>
+      <div class="clear"></div>
+    </div> <!-- end gallery -->
+  </div> <!-- end galleryWrapper -->
+  <div id="footerWrapper">
+    <div id="footer">
+      <span id="btmleftswirl"><%= image_tag "img-bottomleft-swirl.png", :alt => "" %></span>
+      <h4 title="In it to win it!">©2010 Sunlight Labs Olympic Team</h4>
+      <span id="btmrightswirl"><%= image_tag "img-bottomright-swirl.png", :alt => "" %></span>
+      <div class="clear"></div>
+    </div> <!-- end footer -->
+  </div> <!-- end footerWrapper -->
+  <%= javascript_include_tag "raphael-min.js" %>
+  <%= javascript_include_tag "jquery-1.4.2.min.js" %>
+  <%= javascript_include_tag "jquery.hotkeys-0.7.9.min.js" %>
+  <%= javascript_include_tag "bdad.js" %>
+  <%= javascript_include_tag "states.js" %>
+  <%= javascript_include_tag "districts.js" %>
+  <script type="text/javascript" src="http://use.typekit.com/jam6fyv.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  <!--[if IE 6]><link rel="stylesheet" href="buggy.css" type="text/css" media="screen" /><![endif]-->
+  <!--[if IE 7]><link rel="stylesheet" href="buggy7.css" type="text/css" media="screen" /><![endif]-->
