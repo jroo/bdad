@@ -2,9 +2,10 @@ LAST_MOVE = null;
 FIRST_X = null;
 FIRST_Y = null;
 PATH = "";
+SCALE = 0.6;
 DRAWING = {'state':null, 'district':null, 'transform':{'factor':null, 'x_offset':null, 'y_offset':null, 'scale':null}, 'path_list':[], 'attr':{'stroke-width':2, 'fill':'#FFCCCC', 'opacity':0.4}};
 
-DOMAIN = 'localhost:3000';
+DOMAIN = '10.13.30.253:3000';
 
 CANVAS_WIDTH = 640;
 CANVAS_HEIGHT = 480;
@@ -45,7 +46,10 @@ $('document').ready(function() {
     });
     
     TOKEN = document.getElementById('sketch_token').value;
-    drawDistrict(document.getElementById('district_code').value, 'map_container');
+    district_code = document.getElementById('district_code').value;
+    state_id = district_code.substring(0,2);
+    transform = drawDistrict(district_code, 'map_container', MAP_CANVAS);
+    drawStateDistricts(state_id, 'districts_container', 'background_container', transform);
 
 });
 
@@ -77,13 +81,14 @@ function saveShape(canvas, path) {
 }
 
 function saveDrawing(drawing) {
+    alert(drawing.transform.x_offset + ", " + drawing.transform.y_offset);
     descaled_paths = descalePaths(drawing.path_list, drawing.transform, CANVAS_HEIGHT, CANVAS_WIDTH);
     d = { 'paths':descaled_paths };
     url = 'http://' + DOMAIN + '/screen_data/';
     t = TOKEN;
     data = { 'd':d, 't':t, 'district_code':document.getElementById('district_code').value }
     $.post(url, data, function(data) {
-        displaySaved('josh', TOKEN);
+        //displaySaved('josh', TOKEN);
     }, "json");
 }
 
@@ -149,9 +154,8 @@ function descalePaths(scaled_paths, transform, canvas_height, canvas_width) {
     return(positioned_paths);
 }
 
-function drawDistrict(district_string, target_name) {
-    state_id = district_string[0] + district_string[1];
-    district_id = district_string;
+function drawDistrict(district_string, target_name, target_canvas) {
+    state_id = district_string.substring(0,2);
     
     target_height = $('#'+target_name).height();
     target_width = $('#'+target_name).width();
@@ -159,9 +163,8 @@ function drawDistrict(district_string, target_name) {
     target_x_mid = parseInt(target_width/2);
     target_y_mid = parseInt(target_height/2);
     
-    //district = STATES.features[state_id.toString()].attributes.districts
-    bounds = DISTRICTS.features[district_id.toString()].bounds;
-    paths = DISTRICTS.features[district_id.toString()].paths;
+    bounds = DISTRICTS.features[district_string].bounds;
+    paths = DISTRICTS.features[district_string].paths;
     mid_x = (bounds.minX + bounds.maxX) / 2;
     mid_y = (bounds.minY + bounds.maxY) / 2;
     x_offset = target_x_mid - mid_x;
@@ -171,9 +174,51 @@ function drawDistrict(district_string, target_name) {
     x_factor = target_width / width;
     y_factor = target_height / height;
     
-    var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset, 0.6, target_height, target_width);
+    var new_paths = scalePaths(paths, x_factor, y_factor, x_offset, y_offset, SCALE, target_height, target_width);
     DRAWING.transform = new_paths.attr;
-    drawSVG(MAP_CANVAS, new_paths.paths, null, {fill:'#CCCCFF', opacity:0.6 });
+    drawSVG(target_canvas, new_paths.paths, null, {fill:'#CCCCFF', opacity:0.6 });
+    return({'x_factor':x_factor, 'y_factor':y_factor, 'x_offset':x_offset, 'y_offset':y_offset});
+}
+
+function drawStateDistricts(state_id, districts_target, state_target, transform) {
+    state_id = parseInt(state_id).toString();
+    //districts = STATES.features[state_id].attributes.districts;
+    districts = DISTRICTS.features;
+    t_height = $('#'+districts_target).height();
+    t_width = $('#'+districts_target).width();
+    
+    //draw districts
+    c = new Raphael(document.getElementById(districts_target), t_width, t_height);
+    paths = [];
+    for (i in districts) {
+        scaled_paths = scalePaths(DISTRICTS.features[i].paths,
+            transform.x_factor, transform.y_factor, transform.x_offset, 
+            transform.y_offset, SCALE, t_height, t_width);
+        //districts[i] = zeroPad(districts[i], 4);
+        /*scaled_paths = scalePaths(DISTRICTS.features[districts[i]].paths,
+            transform.x_factor, transform.y_factor, transform.x_offset, 
+            transform.y_offset, SCALE, t_height, t_width);*/
+        for (j in scaled_paths.paths) {
+            paths.push(scaled_paths.paths[j]);
+        }
+    }
+    drawSVG(c, paths, null, {opacity:0.1})
+    
+    //draw state outlines
+    
+    states = STATES.features;
+    
+    s = new Raphael(document.getElementById(state_target), t_width, t_height);
+    state_paths = [];
+    for (i in states) {
+        state_scaled_paths = scalePaths(STATES.features[i].paths,
+            transform.x_factor, transform.y_factor, transform.x_offset, 
+            transform.y_offset, SCALE, t_height, t_width);
+        for (j in state_scaled_paths.paths) {
+            state_paths.push(state_scaled_paths.paths[j]);
+        }
+    }
+    drawSVG(s, state_paths, null, {'stroke-width':8, 'fill-opacity':0, 'opacity':0.1});
 }
 
 function drawSVG(canvas, paths, path, attr) {
@@ -224,5 +269,11 @@ function arrayToPath(path_array) {
     return path_string;
 }
 
-function displaySaved(target_name, token) {
+function zeroPad(num,count) {
+    //from http://sujithcjose.blogspot.com/2007/10/zero-padding-in-java-script-to-add.html
+    var numZeropad = num + '';
+    while(numZeropad.length < count) {
+        numZeropad = "0" + numZeropad;
+    }
+    return numZeropad;
 }
