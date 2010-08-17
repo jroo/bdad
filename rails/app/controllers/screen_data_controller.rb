@@ -22,8 +22,7 @@ class ScreenDataController < ApplicationController
       return
     end
     screen_data.district_code = params[:district_code]
-    decoded_d = ActiveSupport::JSON.decode(params[:d])
-    screen_data.value = decoded_d['paths'].to_json
+    screen_data.value = params[:d]['paths'].to_json
     if screen_data.save
       render :text => response_hash(screen_data).to_json, :status => 200
     else
@@ -37,9 +36,20 @@ class ScreenDataController < ApplicationController
     hash = {
       'district_code' => screen_data.district_code,
       'paths'         => screen_data.value,
-      'population'    => 0, #some query we need (from Kevin)
+      'population'    => 0, # population(screen_data),
       'awards'        => ["Gerry-manderest", "HomeTown"] #get query
     }
   end
+  
+  # def population(screen_data)
+  #   query = <<-BLOCK
+  #     select sum(bgs.pop)
+  #     from (select map_data from screen_datas
+  #     where id = #{screen_data.id})
+  #     as district, bgs
+  #     where ST_contains(district.map_data, bgs.the_point);
+  #   BLOCK
+  #   execute(query)
+  # end
 
 end
