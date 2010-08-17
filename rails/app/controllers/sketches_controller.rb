@@ -51,8 +51,7 @@ class SketchesController < ApplicationController
     if params[:district_id]
       District.find(params[:district_id])
     else
-      # District.find_random
-      District.find_fun_random
+      District.find_random
     end
   end
   
