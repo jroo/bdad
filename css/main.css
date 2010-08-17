@@ -117,3 +117,27 @@ h4 { font-family: "chunk-1","chunk-2",serif; color: #7d481e; display: block; mar
     border: 3px solid #aaa;
     background-color: #EEEEEE;
 }
+
+.tiny_canvas {
+    position:absolute;
+    width: 202px; height: 154px;
+    border: 3px solid #aaa;
+    background-color: transparent;
+    z-index:100;    
+}
+
+.tiny_map {
+    position:absolute;
+    z-index: 1;
+    width: 202px; height: 154px;
+    border: 3px solid #aaa;
+    background-color: transparent;
+}
+
+.tiny_background {
+    position:relative;
+    z-index:0;
+    width: 202px; height: 154px;
+    border: 3px solid #aaa;
+    background-color: #EEEEEE;
+}
