@@ -41,44 +41,7 @@
         </ul>
       </div>
       <div class="clear"></div>
-      <div id="controls">
-        <fieldset id="instructions">
-          <label>Instructions</label>
-          <p>Ever think that districts are weird, even non-sensical shapes? Us, too! We decided to give you the power to have some fun with them. So pick a district, add your artist tag, and give it a killer name. When you’re done save it to our gallery. And of course have fun!</p>
-        </fieldset>
-        <fieldset id="searching">
-          <% form_tag :action => :locate_district, :method => :get do -%>
-            <label for="searchbox">Search For A District</label>
-            <input id="searchbox" name="zip" type="text" value="Enter Zip Code"/>
-            <button class="searchBtn" type="submit">
-              <span>Search</span>
-            </button>
-          <% end %>
-          <label for="newdistrict" id="newdistrictlabel">Keep On Drawing</label>
-          <% form_tag new_sketch_path, :method => :get do -%>
-            <button class="newdistrict" type="submit">
-              <span>New District</span>
-            </button>
-          <% end %>
-        </fieldset>
-        <% form_for @sketch do |f| %>
-          <fieldset id="names">
-            <label for="username">Artist's Name</label>
-            <%= text_field_tag "user_name", @current_user.name, :id => "username", :maxlength => 21 %>
-            <label for="districtname" id="districtnamelabel">District's Name</label>
-            <%= f.text_field :title, :id => "districtname", :maxlength => 40 %>
-            <%= f.hidden_field :district_id %>
-            <%= f.hidden_field :token %>
-            <%= hidden_field_tag :district_code, @district.code %>
-          </fieldset>
-          <fieldset id="undosave">
-            <label for="submit" id="submitlabel">Save My Drawing</label>
-            <button class="submit" type="submit">
-              <span>Submit</span>
-            </button>
-          </fieldset>
-        <% end %>
-      </div>
+      <%= render :partial => 'controls' %>
       <div class="clear"></div>
     </div> <!-- end header -->
   </div> <!-- end headerWrapper -->
