@@ -1,13 +1,24 @@
-set :application, "set your application name here"
-set :repository,  "set your repository location here"
+default_run_options[:pty] = true # http://help.github.com/capistrano/
 
-set :scm, :subversion
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+set :application, "bdad"
+set :repository,  "git://github.com/jroo/bdad.git"
 
-role :web, "your web-server here"                          # Your HTTP server, Apache/etc
-role :app, "your app-server here"                          # This may be the same as your `Web` server
-role :db,  "your primary db-server here", :primary => true # This is where Rails migrations will run
-role :db,  "your slave db-server here"
+set :scm, :git
+set :user, "foo"
+
+set :user, "bdad"
+set :use_sudo, false
+set :deploy_via, :remote_cache
+set :deploy_to, "/projects/bdad/src/bdad"
+set :domain, "ec2-184-73-118-224.compute-1.amazonaws.com"
+# set :domain, "MetroCenter"
+set :domain, "BdadMetroCenter"
+set :branch, 'production'
+
+role :web, domain
+role :app, domain
+role :db,  domain
+# role :db, "morgan.sunlightlabs.org", :primary => true
 
 # If you are using Passenger mod_rails uncomment this:
 # if you're still using the script/reapear helper you will need
