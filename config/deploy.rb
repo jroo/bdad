@@ -1,4 +1,5 @@
-default_run_options[:pty] = true # http://help.github.com/capistrano/
+# See http://help.github.com/capistrano/
+default_run_options[:pty] = true 
 
 set :application, "bdad"
 set :repository,  "git://github.com/jroo/bdad.git"
@@ -10,7 +11,7 @@ set :user, "bdad"
 set :use_sudo, false
 set :deploy_via, :remote_cache
 set :deploy_to, "/projects/bdad/src/bdad"
-set :domain, "BdadMetroCenter" # see .ssh/config
+set :domain, "dupont-bdad" # see .ssh/config
 set :branch, 'production'
 
 role :web, domain
