@@ -18,13 +18,24 @@ role :web, domain
 role :app, domain
 role :db,  domain
 
-# If you are using Passenger mod_rails uncomment this:
-# if you're still using the script/reapear helper you will need
-# these http://github.com/rails/irs_process_scripts
 namespace :deploy do
   task :start do ; end
   task :stop do ; end
+
+  # Needed for Passenger mod_rails:
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
+
+  task :symlink_config do
+    shared_config = File.join(shared_path, 'config')
+    release_config = "#{release_path}/config"
+    %w{database}.each do |file|
+      run "ln -s #{shared_config}/#{file}.yml #{release_config}/#{file}.yml"
+    end
+  end
+end
+
+after 'deploy:update_code' do
+  deploy.symlink_config
 end
